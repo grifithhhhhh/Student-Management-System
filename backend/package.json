@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "just the backend for my project",
+  "homepage": "https://github.com/grifithhhhhh/Student-Management-System#readme",
+  "bugs": {
+    "url": "https://github.com/grifithhhhhh/Student-Management-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grifithhhhhh/Student-Management-System.git"
+  },
+  "license": "ISC",
+  "author": "pushpak",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  }
+}
