@@ -2,16 +2,28 @@ const express = require("express")
 const PORT = 8004
 const app = express()
 const fs = require("fs")
+app.use(express.json());
+const {createLogs} = require("./middlewares/log")
+
+
+// Middleware--------------------------------------
+app.use(createLogs("log.txt"));
+
 
 // ROUTES -----------------------------
 app.get('/', (req,res)=> {
     res.send("the server is running")
 })
 
-const log = `${Date.now()} hey there \n`
+app.post('/users', (req,res)=> {
+    const body = req.body;
+    console.log(body);
 
-fs.appendFile("./log.txt", log , (err) => {
-    console.log(err)
+    res.json(
+        {messageStatus : "recieved",
+            data: body
+        }
+    )
 })
 
 // SERVER -------------------------------------------------------
