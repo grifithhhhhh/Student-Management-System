@@ -4,9 +4,9 @@ const router = express.Router()
 
 
 // ACTUAL ROUTES------------------------------------------
-    router.post('/users', handleNewStudent)
-    router.delete('/users/:id', removeStudent)
-    router.get('/users', handleGetAllStudents)
+    router.post('/students', handleNewStudent)
+    router.delete('/students/:id', removeStudent)
+    router.get('/students', handleGetAllStudents)
 
 // TEST ROUTES -------------------------------------------
     router.get('/', (req,res)=> {

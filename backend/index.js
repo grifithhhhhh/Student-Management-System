@@ -5,8 +5,10 @@ const fs = require("fs")
 const {createLogs} = require("./middlewares/log")
 const  mongoose = require("mongoose")
 const studentRouter = require("./routes/studentRoutes")
+const cors = require("cors");
 
 // Middleware--------------------------------------
+    app.use(cors());
     app.use(createLogs("log.txt"));
     app.use(express.json());
 
