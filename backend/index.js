@@ -4,6 +4,7 @@ const app = express()
 const fs = require("fs")
 const {createLogs} = require("./middlewares/log")
 const  mongoose = require("mongoose")
+const studentRouter = require("./routes/studentRoutes")
 
 // Middleware--------------------------------------
     app.use(createLogs("log.txt"));
@@ -15,15 +16,7 @@ const  mongoose = require("mongoose")
     .catch(err => console.log(err))
     
 // ROUTES -----------------------------
-    app.get('/', (req,res)=> {
-        res.send("the server is running")
-    })
-
-    app.post('/', (req,res)=> {
-        const Body = req.body;
-        console.log(Body);
-        res.json(Body)
-    })
+   app.use('/', studentRouter)
 
 // SERVER -------------------------------------------------------
     app.listen(PORT, ()=> {console.log("Server started @ : ", PORT)})
