@@ -1,21 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-import API from './api'
+import {Route, Routes} from 'react-router-dom'
+import Admin from './pages/admin'
+import Student from './pages/student'
+import Choice from './components/Choice'
+import Attendance from './pages/admin/Attendance'
+import Dashboard from './pages/admin/Dashboard'
+import StudentInfo from './pages/admin/StudentInfo'
+import AdminWelcome from './components/AdminWelcome'
+
 
 
 function App() {
-
-  const getData = async ()=> {
-  const response = axios.get("http://localhost:8004/students");
-  console.log(response)
-
-  }
+  
   return (
+        <div>
+         
+          <Routes>
+            <Route path='/' element={<Choice/>} />
+            <Route path='/student' element={<Student/>} />
 
-    <div className='bg-black p-4 flex justify-between '>   
-      <h1 className=' text-2xl text-white '>Student Management System</h1>
-      <button  className='p-3 bg-amber-50 text-2xl rounded-3xl px-4' onClick={getData} >CLICK ME</button>
-    </div>)
+            <Route path='/admin' element={<Admin/>}>
+                    <Route index element={<AdminWelcome />} />
+                    <Route path='dashboard' element={<Dashboard/>}/>
+                    <Route path='attendance' element={<Attendance/>}/>
+                    <Route path='studentinfo' element={<StudentInfo/>}/>
+            </Route>
+          </Routes>
+        </div>
+    )
     
   
 }
