@@ -19,6 +19,10 @@ async function handleNewStudent (req,res) {
         lastName: body.lastName,
         gender: body.gender,
         email: body.email,
+        imgURL: body.imgURL,
+        courses: body.courses,
+        attendance: body.attendance,
+
     })
         return res.status(201).json(student)
 }

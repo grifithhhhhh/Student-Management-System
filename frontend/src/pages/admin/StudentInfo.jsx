@@ -5,7 +5,7 @@ import StudentNavbar from '../../components/StudentNavbar'
 const StudentInfo = () => {
 
   return (
-    <div className=''>
+    <div className=' flex flex-col w-full mr-5'>
       <StudentNavbar/>
       <Outlet/>
     </div>

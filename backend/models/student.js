@@ -20,6 +20,20 @@ const studentSchema = new mongoose.Schema({
     gender: {
         type: String,
     },
+
+    imgURL: {
+        type: String,
+    },
+    
+    courses: [{
+        courseName: String,
+        credits : Number,
+    }],
+    attendance: {
+        totalClasses: Number,
+        attendedClasses: Number,
+        percentage: Number,
+    },
 }, {timestamps: true})
 
 

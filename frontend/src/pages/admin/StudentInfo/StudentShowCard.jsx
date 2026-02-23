@@ -40,7 +40,7 @@ const StudentShowCard = () => {
             {Data.map(function(elem){
           return (
             <div key={elem._id} className='bg-amber-300 min-w-60 h-80 rounded-2xl border-black border-2 text-white p-4  m-3 flex flex-col  '>
-              <img className='bg-white border-black border-2 w-25 h-25 rounded-2xl mb-3 px-2' src="" alt="" />
+              <img className='bg-white border-black border-2 w-25 h-25 rounded-2xl mb-3 px-2' src={elem.imgURL} alt="" />
               <h1 className=' text-2xl font-bold '>{elem.firstName} {elem.lastName}</h1>
               <h1 className=' text-xl '>{elem.gender}</h1>
               <h1 className=' text-xl line-clamp-1 '>{elem.email}</h1>
