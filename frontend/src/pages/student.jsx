@@ -6,7 +6,7 @@ const admin = () => {
 
   const [Data, setData] = useState([])
   const getData = async ()=> {
-  const response = await axios.get("http://localhost:8004/students");
+  const response = await axios.get("http://localhost:8004/students",);
   console.log(response.data)
   setData(response.data)
   console.log("Data recieved")
@@ -15,6 +15,7 @@ const admin = () => {
   return (
     <div>
         <h1>This is a admin page</h1>
+        
         <div>   
         <div className='bg-black p-4 flex justify-between'>
         <h1 className=' text-2xl text-white '>Student Management System</h1>
