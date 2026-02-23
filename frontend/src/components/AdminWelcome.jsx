@@ -2,9 +2,10 @@ import React from "react"
 
 const AdminWelcome = () => {
   return (
-    <div className="bg-blue-500 text-white p-10  w-full mr-5 rounded-2xl">
-      <h1 className="text-3xl font-bold">Welcome Admin</h1>
-      <p>Select Dashboard or Students to continue.</p>
+    <div className="bg-blue-500 text-white relative w-full mr-5 rounded-3xl">
+      <img className='w-full h-full absolute object-cover rounded-3xl' src="https://i.pinimg.com/1200x/f1/a8/dd/f1a8dd69a469a0acb281d761aca2a70c.jpg" alt="" />
+      <h1 className="text-6xl absolute top-10 left-10  font-bold">Welcome Admin</h1>
+      <p className="text-5xl font-bold absolute top-30 left-10">Select Dashboard or Students to continue.</p>
     </div>
   )
 }

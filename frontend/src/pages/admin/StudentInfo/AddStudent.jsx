@@ -72,7 +72,7 @@ const [attendance, setattendance] = useState(initialAttendance)
   return (
     <div className='bg-pink-300 border-4 p-5  rounded-3xl flex flex-col justify-center items-center  '>
         <form onSubmit={()=> {console.log("form submited")}} className='flex flex-col gap-3'>
-          <h1 className='text-3xl mb-2 font-bold '>Add Student</h1>
+          <h1 className='text-3xl mb-2 font-bold '>Please Fill Student Info</h1>
 
           <div>
             <input 
@@ -124,25 +124,25 @@ const [attendance, setattendance] = useState(initialAttendance)
           name='courseName'
           onChange={handleCoursesClicked}
           value={courses.courseName}
-          placeholder='courseName' />
+          placeholder='Course Name' />
 
           <input type="text"
           className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
           onChange={handleCoursesClicked}
           value={courses.credits}
           name='credits'
-          placeholder='credits' />
+          placeholder='Credits' />
           
         </div>
 
         <div>
-          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='totalClasses' />
-          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='attendedClasses' />
-          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='percentage'/>
+          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='Total Classes' />
+          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='Attended Classes' />
+          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='Percentage'/>
         </div>
 
 
-          <button onClick={btnClicked} className='bg-green-500 text-white text-xl p-2 rounded-2xl mt-auto --4'>Add student</button>
+          <button onClick={btnClicked} className='bg-green-500 border-2 border-black text-white text-xl p-2 rounded-2xl mt-auto --4'>Add student</button>
         </form>
       </div> 
   )
