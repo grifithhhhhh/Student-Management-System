@@ -10,7 +10,7 @@ const Contentsection = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8004/students");
-        setData(response.data[2]);  // Assuming index 2 is the target student object [web:11][web:13]
+        setData(response.data[0]);  // Assuming index 2 is the target student object [web:11][web:13]
       } catch (err) {
         setError('Failed to fetch data');
         console.error(err);

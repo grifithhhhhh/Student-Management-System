@@ -12,6 +12,7 @@ import StudentInfoPage from './components/StudentInfoPage'
 import AddStudent from './pages/admin/StudentInfo/AddStudent'
 import StudentList from './pages/admin/StudentInfo/StudentList'
 import StudentShowCard from './pages/admin/StudentInfo/StudentShowCard'
+import Login from './pages/Login'
 
 
 
@@ -21,7 +22,7 @@ function App() {
         <div>
          
           <Routes>
-            <Route path='/' element={<Choice/>} />
+            <Route path='/' element={<Login/>} />
             <Route path='/student' element={<Student/>} />
 
             <Route path='/admin' element={<Admin/>}>

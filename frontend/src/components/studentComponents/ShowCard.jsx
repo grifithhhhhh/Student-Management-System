@@ -7,7 +7,7 @@ const ShowCard = () => {
     const [Data, setData] = useState([])
     const getData = async ()=> {
     const response = await axios.get("http://localhost:8004/students");
-    setData(response.data[2])
+    setData(response.data[0])
     
     }
 

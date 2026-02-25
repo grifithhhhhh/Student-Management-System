@@ -9,6 +9,7 @@ const AddStudent = () => {
   gender: "",
   email: "",
   imgURL: "",
+  password:"",
   courses: [{}],
   attendance: {}
 }
@@ -102,13 +103,23 @@ const [attendance, setattendance] = useState(initialAttendance)
           </div>
 
           
-          <input 
+         <div className='flex'>
+           <input 
           name='email'
           onChange={handleClick}
           value={student.email}
           className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
           type="text" 
           placeholder='Email' />
+          
+          <input 
+          name='password'
+          onChange={handleClick}
+          value={student.password}
+          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
+          type="text" 
+          placeholder='Password' />
+         </div>
 
           <input 
           name='imgURL'

@@ -6,11 +6,17 @@ const {createLogs} = require("./middlewares/log")
 const  mongoose = require("mongoose")
 const studentRouter = require("./routes/studentRoutes")
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const { restrictToLoggedinUserOnly } = require("./middlewares/auth")
 
 // Middleware--------------------------------------
-    app.use(cors());
+    app.use(cors({
+    origin: "http://localhost:5173", // your frontend port
+    credentials: true
+    }));
     app.use(createLogs("log.txt"));
     app.use(express.json());
+    app.use(cookieParser())
 
 // CONNECTION ------------------------
     mongoose.connect('mongodb://127.0.0.1:27017/studentserver')
