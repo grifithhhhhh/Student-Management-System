@@ -47,7 +47,7 @@ const deleteStudent = async (id) => {
   
 
   return (
-    <div className=' w-full  bg-amber-500 border-4 rounded-3xl mr-4 p-4 flex flex-col justify-center items-center '>
+    <div className=' w-full  bg-amber-500 h-full border-4 rounded-3xl mr-4 p-4 flex flex-col justify-center items-center '>
 
       <h1 className='text-3xl font-bold justify-start text-white text-stroke '>Students Info</h1>
      

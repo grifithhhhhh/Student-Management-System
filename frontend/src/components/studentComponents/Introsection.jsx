@@ -13,7 +13,7 @@ const Introsection = () => {
   
   
   return (
-    <div className=' w-full h-40 flex px-5 '>
+    <div className=' w-full h-40 flex px-5 mt-5  '>
 
       <div className='bg-purple-400 border-4 w-full h-fit p-8 rounded-3xl mt-auto'>
       <h1 className='text-3xl font-bold text '>Hii, {students.firstName} {students.lastName}</h1>

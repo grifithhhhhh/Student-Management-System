@@ -6,8 +6,8 @@ import Student from './pages/student'
 import Attendance from './pages/admin/Attendance'
 import Dashboard from './pages/admin/Dashboard'
 import StudentInfo from './pages/admin/StudentInfo'
-import AdminWelcome from './components/AdminWelcome'
-import StudentInfoPage from './components/StudentInfoPage'
+import AdminWelcome from './components/adminComponents/AdminWelcome'
+import StudentInfoPage from './components/adminComponents/StudentInfoPage'
 import AddStudent from './pages/admin/StudentInfo/AddStudent'
 import StudentList from './pages/admin/StudentInfo/StudentList'
 import StudentShowCard from './pages/admin/StudentInfo/StudentShowCard'
@@ -15,7 +15,10 @@ import Login from './pages/Login'
 import api from "./api";
 import useStudentStore from "./store/useStudentStore";
 import { useNavigate } from 'react-router-dom'
-
+import Assignments from "./pages/studentPages/Assignments"
+import StudentAttendance from './pages/studentPages/StudentAttendance'
+import StudentDashboard from './pages/studentPages/studentDashboard'
+import StudentWelcome from './pages/studentPages/StudentWelcome'
 
 
 
@@ -44,7 +47,12 @@ function App() {
          
           <Routes>
             <Route path='/' element={<Login/>} />
-            <Route path='/student' element={<Student/>} />
+            <Route path='/student' element={<Student/>} >
+            <Route index element={<StudentWelcome/>}/>
+            <Route path='studentDashboard' element={<StudentDashboard/>}/>
+            <Route path='assignment' element={<Assignments/>}/>
+            <Route path='studentattendance' element= {<StudentAttendance/>}/>
+            </Route>
 
             <Route path='/admin' element={<Admin/>}>
                     <Route index element={<AdminWelcome />} />

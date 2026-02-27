@@ -1,7 +1,7 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
-import Sidebar from '../components/Sidebar'
-import Herosection from '../components/Herosection'
+import Navbar from '../components/adminComponents/Navbar'
+import Sidebar from '../components/adminComponents/Sidebar'
+import Herosection from '../components/adminComponents/Herosection'
 
 
 
@@ -11,7 +11,7 @@ const student = () => {
 
     <div className='flex  bg-[#7a7ce4] w-screen h-screen'>
       <Sidebar/>
-      <div className='flex flex-col h-screen pr-5 pb-5 w-full'>
+      <div className='flex flex-col gap-3 h-screen pr-5 py-5 w-full'>
         <Navbar/>
         <Herosection/>
       </div>

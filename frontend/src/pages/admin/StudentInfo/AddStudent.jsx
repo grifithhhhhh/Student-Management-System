@@ -80,7 +80,7 @@ console.log(useStudentStore.getState());
     
   }
   return (
-    <div className='bg-pink-300 border-4 p-5  rounded-3xl flex flex-col justify-center items-center  '>
+    <div className='bg-pink-300 border-4 p-5 h-full rounded-3xl flex flex-col justify-center items-center  '>
         <form onSubmit={()=> {console.log("form submited")}} className='flex flex-col gap-3'>
           <h1 className='text-3xl mb-2 font-bold '>Please Fill Student Info</h1>
 
@@ -127,6 +127,10 @@ console.log(useStudentStore.getState());
           value={student.password}
           className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
           type="text" 
+          autoComplete="off"
+          spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
           placeholder='Password' />
          </div>
 

@@ -1,6 +1,5 @@
 import React from 'react'
-import Card from '../../components/Card'
-
+import Card from '../../components/adminComponents/Card'
 const Dashboard = () => {
   return (
     <div className='bg-[#634cce]  p-2  w-fit h-full mr-5 rounded-2xl'>

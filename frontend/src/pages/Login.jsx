@@ -108,7 +108,15 @@ const navigate = useNavigate()
               
                 </div>
                 <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="text" onChange={handleClick} name='email' placeholder='Email' />
-                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="password" onChange={handleClick} name='password' placeholder='Password' />
+                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' 
+                      type="password" 
+                      autoComplete="off"
+                      spellCheck={false}
+                      autoCorrect="off"
+                      autoCapitalize="off" 
+                      onChange={handleClick} 
+                      name='password' 
+                      placeholder='Password' />
                 <button className='w-full bg-black text-white text-xl  rounded-2xl mb-4 p-2' onClick={buttonClicked}>Log in</button>
                 </form>
 

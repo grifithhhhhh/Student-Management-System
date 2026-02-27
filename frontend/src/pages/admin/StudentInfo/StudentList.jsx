@@ -6,7 +6,7 @@ const StudentList = () => {
   const students = useStudentStore((state) => state.students);
 
   return (
-    <div className='bg-amber-800 border-4 min-w-full p-5 rounded-3xl h-110'>
+    <div className='bg-amber-800 border-4 min-w-full h-full p-5 rounded-3xl h-110'>
       <div className='flex mb-2 rounded-2xl bg-amber-100 p-3 justify-between'>
         <h1 className='text-2xl font-bold'>Roll no</h1>
         <h1 className='text-2xl font-bold'>Name</h1>
