@@ -2,12 +2,14 @@ import React from 'react'
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useContext } from "react";
-import { StudentContext } from "../../context/StudentContext"
-
+import useStudentStore from "../../store/useStudentStore";
 
 const Attendance = () => {
-const { student, loginStudent, logoutStudent } = useContext(StudentContext);
+  const student = useStudentStore((state) => state.student);
+  if (!student) {
+  return null; // or return a loader
+}
+
 console.log("student:",student.admin);
 console.log("StudentInfo",student.StudentData)
 

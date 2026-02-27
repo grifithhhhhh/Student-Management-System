@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import useStudentStore from '../../../store/useStudentStore'
 
 const AddStudent = () => {
+
+  const { addStudent } = useStudentStore();
 
   const initialStudent = {
   firstName: "",
@@ -50,7 +53,7 @@ const [attendance, setattendance] = useState(initialAttendance)
     })
   }
 
-  const btnClicked = (e)=>{
+  const btnClicked = async (e)=>{
     e.preventDefault();
     console.log(student)
     console.log(courses)
@@ -63,7 +66,11 @@ const [attendance, setattendance] = useState(initialAttendance)
     }
     console.log("finalStudent :", finalStudent)
 
-    const response = axios.post("http://localhost:8004/students", finalStudent)
+    const response = await axios.post("http://localhost:8004/students", finalStudent)
+console.log(useStudentStore.getState());
+    addStudent(response.data);
+console.log(useStudentStore.getState());
+    
     setstudent(initialStudent)
     setcourses(initialCourse)
     setattendance(initialAttendance)

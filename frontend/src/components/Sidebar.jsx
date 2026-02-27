@@ -1,10 +1,12 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { useContext } from "react";
-import { StudentContext } from "../context/StudentContext"
+import useStudentStore from "../store/useStudentStore";
 
 const Sidebar = () => {
-  const { student, loginStudent, logoutStudent } = useContext(StudentContext);
+  const student = useStudentStore((state) => state.student);
+  if (!student) {
+  return null; // or return a loader
+}
 
   return (
     <div className='flex flex-col w-1/6 bg-black  p-4 gap-3  text-black font-bold rounded-3xl m-5 '>
@@ -21,7 +23,7 @@ const Sidebar = () => {
         <div className=' h-1/4 flex flex-col p-2 gap-3'>
             <h1 className=' flex bg-amber-300 border-amber-600 border-2 rounded-3xl w-full p-2 items-center justify-center'>Settings</h1>
             <h1 className=' flex bg-amber-300 border-amber-600 border-2 rounded-3xl w-full p-2 items-center justify-center'>Help</h1>
-            <h1 className='flex bg-amber-300 border-amber-600 border-2 rounded-3xl w-full p-2 items-center justify-center'>Logout</h1>
+            <h1 className='flex bg-amber-300 border-amber-600 border-2 rounded-3xl w-full p-2 items-center justify-center'><Link to='/' >Logout</Link></h1>
         </div>
         <div className='flex flex-col p-4 h-full bg-[#b0e4fe] rounded-3xl  items-center justify-center  border '>
             <img className=' w-full h-fit rounded-3xl object-cover' src="https://i.pinimg.com/1200x/29/dd/db/29dddbb74db0c68adc5358271281e03a.jpg" alt="" />

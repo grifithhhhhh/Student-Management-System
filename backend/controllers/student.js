@@ -51,7 +51,7 @@ async function handleNewStudent (req,res) {
         return res.status(400).json({msg: "All fields are required"})
     }
 
-    const student = await Student.create({
+    const newStudent = await Student.create({
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
@@ -62,7 +62,7 @@ async function handleNewStudent (req,res) {
         attendance: body.attendance,
 
     })
-        return res.status(201).json(student)
+        return res.status(201).json(newStudent)
 }
 
 async function handleNewAdmin (req,res) {

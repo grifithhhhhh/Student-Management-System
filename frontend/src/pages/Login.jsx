@@ -1,15 +1,13 @@
 import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useContext } from "react";
-import { StudentContext } from "../context/StudentContext";
+import useStudentStore from '../store/useStudentStore';
 
 const Login = () => {
 
-const { loginStudent } = useContext(StudentContext);
+const loginStudent = useStudentStore((state) => state.loginStudent);
+const { loginAdmin } = useStudentStore();
 const navigate = useNavigate()
 
   const [student, setstudent] = useState({
@@ -41,11 +39,11 @@ const navigate = useNavigate()
     if(response.status === 200){
      if(student.role === "admin"){
       navigate('/admin')
-      loginStudent(response.data.Data)
+      loginAdmin(response.data.Data);
      }
      if(student.role === "student"){
       navigate('/student')
-      loginStudent(response.data.student)
+      loginStudent(response.data.student, "student")
      }
     }
 
@@ -110,7 +108,7 @@ const navigate = useNavigate()
               
                 </div>
                 <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="text" onChange={handleClick} name='email' placeholder='Email' />
-                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="text" onChange={handleClick} name='password' placeholder='Password' />
+                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="password" onChange={handleClick} name='password' placeholder='Password' />
                 <button className='w-full bg-black text-white text-xl  rounded-2xl mb-4 p-2' onClick={buttonClicked}>Log in</button>
                 </form>
 

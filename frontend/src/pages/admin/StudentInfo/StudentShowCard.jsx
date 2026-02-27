@@ -1,23 +1,32 @@
 import React from 'react'
 import axios from 'axios'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { IdCard } from 'lucide-react'
-import { useContext } from "react";
-import { StudentContext } from "../../../context/StudentContext"
+import useStudentStore from "../../../store/useStudentStore";
 
 
 const StudentShowCard = () => {
+  const students = useStudentStore((state) => state.students);
+  const removeStudentFromStore = useStudentStore((state) => state.deleteStudent);
+
+  if (!students) {
+  return null; // or return a loader
+}
+  
+  const deleteStudent = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8004/students/${id}`
+      );
+
+      if (response.status === 200) {
+        removeStudentFromStore(id); // ✅ update Zustand
+        console.log("Deleted entry with id:", id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   
-  const deleteStudent = async (id)=> {
-    const response = await axios.delete(`http://localhost:8004/students/${id}`)
-    console.log("deleted entry with id : ",id)
-
-    getData()
-  }
-  
-    const { student, loginStudent, logoutStudent } = useContext(StudentContext);
 
   return (
     <div className=' w-full  bg-amber-500 border-4 rounded-3xl mr-4 p-4 flex flex-col justify-center items-center '>
@@ -25,7 +34,7 @@ const StudentShowCard = () => {
       <h1 className='text-3xl font-bold justify-start text-white text-stroke '>Students Info</h1>
      
       <div className=' w-200 overflow-x-scroll flex'>
-            {student.StudentData.map(function(elem){
+            {students.map(function(elem){
           return (
             <div key={elem._id} className='bg-amber-300 min-w-60 h-80 rounded-2xl border-black border-2 text-black p-4  m-3 flex flex-col  '>
               <img className='bg-white border-black border-2 w-25 h-25 rounded-2xl mb-3 object-cover' src={elem.imgURL} alt="" />
