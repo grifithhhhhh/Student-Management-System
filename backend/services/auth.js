@@ -4,11 +4,13 @@ const jwt = require("jsonwebtoken")
 const SECRET_KEY = "Pushpak@123"
 
 
-function generateToken (user) {
+function generateToken (user,role) {
 
     const payload = {
         email : user.email,
-        password : user.password
+        password : user.password,
+        role: role,
+        
     }
     return jwt.sign(payload, SECRET_KEY)
 }

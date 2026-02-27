@@ -4,6 +4,39 @@ const Admin = require("../models/admin")
 const {generateToken,verifyToken} = require("../services/auth")
 
 // NEW STUDENTS--------------------------------------------------------------
+
+async function handleReloads(req, res) {
+    console.log("handleReload is working");
+
+    const token = req.cookies?.token;
+
+    if (!token) {
+        console.log("No token found in cookies");
+        return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const user = verifyToken(token);
+
+    if (!user) {
+        console.log("Token invalid or expired");
+        return res.status(401).json({ message: "User not found" });
+    }
+
+    const { email, role } = user;
+    console.log("user from handleReload: ", user);
+
+    if (role === "student") {
+        const student = await Student.findOne({ email });
+        return res.status(200).json({ student });
+    }
+
+    if (role === "admin") {
+        const admin = await Admin.findOne({ email });
+        const allStudent = await Student.find({});
+        return res.status(200).json({ Data: { admin, StudentData: allStudent } });
+    }
+}
+
 async function handleNewStudent (req,res) {
     const body = req.body
 
@@ -98,6 +131,7 @@ async function getStudentByEmail(req, res) {
 }
 
 async function handleLogin(req,res) {
+  console.log("handlelogin is working ------------------------------------------")
     const {email, password, role}= req.body
   if(role === "student"){
 
@@ -111,7 +145,7 @@ async function handleLogin(req,res) {
       }
 
         //create jwt 
-      const token = generateToken(student);
+      const token = generateToken(student,role);
 
     // send this token to browser
         res.cookie("token", token);
@@ -119,7 +153,7 @@ async function handleLogin(req,res) {
         console.log("student : ", student);
         console.log("email : ",student.email);
       
-        return res.status(200).json({msg: "worked correctly", token:token, student: student})
+      return res.status(200).json({msg: "worked correctly", token:token, student:student})
   }
   
   if(role === "admin") {
@@ -133,15 +167,16 @@ async function handleLogin(req,res) {
   }
 
     //create jwt 
-   const token = generateToken(admin);
+   const token = generateToken(admin,role);
 
  // send this token to browser
     res.cookie("token", token);
-    console.log(token)
-    console.log("admin : ", admin);
-    console.log("email : ",admin.email);
+    //console.log(token);
+    //console.log("admin : ", admin);
+    //console.log("email : ",admin.email);
+    const allStudent = await Student.find({});
   
-    return res.status(200).json({msg: "worked correctly"})
+    return res.status(200).json({msg: "worked correctly", token:token, Data: {admin:admin,StudentData: allStudent}})
   }
   
   }
@@ -155,4 +190,5 @@ module.exports = {
     getStudentByEmail,
     handleLogin,
     handleNewAdmin,
+    handleReloads,
 }

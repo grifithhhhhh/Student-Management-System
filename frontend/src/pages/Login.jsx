@@ -4,9 +4,12 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from "react";
+import { StudentContext } from "../context/StudentContext";
 
 const Login = () => {
 
+const { loginStudent } = useContext(StudentContext);
 const navigate = useNavigate()
 
   const [student, setstudent] = useState({
@@ -28,7 +31,7 @@ const navigate = useNavigate()
   e.preventDefault();
 
   try {
-    console.log("Student:",student);
+    
 
     const response = await axios.post(
       "http://localhost:8004/logininfo",
@@ -38,9 +41,11 @@ const navigate = useNavigate()
     if(response.status === 200){
      if(student.role === "admin"){
       navigate('/admin')
+      loginStudent(response.data.Data)
      }
      if(student.role === "student"){
       navigate('/student')
+      loginStudent(response.data.student)
      }
     }
 

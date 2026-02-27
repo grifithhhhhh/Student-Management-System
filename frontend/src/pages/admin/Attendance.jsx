@@ -2,22 +2,15 @@ import React from 'react'
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { useContext } from "react";
+import { StudentContext } from "../../context/StudentContext"
 
 
 const Attendance = () => {
+const { student, loginStudent, logoutStudent } = useContext(StudentContext);
+console.log("student:",student.admin);
+console.log("StudentInfo",student.StudentData)
 
-  const [Data, setData] = useState([])
-    const getData = async ()=> {
-    const response = await axios.get("http://localhost:8004/students");
-    console.log(response.data)
-    setData(response.data)
-    console.log(response.data[0]._id)
-    console.log()
-    }
-
-    useEffect(() => {
-        getData()
-      }, [])
 
   return (
     <div className='bg-white border-4 w-full h-full mr-5 rounded-3xl flex flex-col p-5 '>
@@ -27,7 +20,7 @@ const Attendance = () => {
       </div>
       
       <div className='flex h-fit '>
-        {Data.map(function(elem){
+        {student.StudentData.map(function(elem){
         return(
           
           

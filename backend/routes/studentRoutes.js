@@ -1,5 +1,5 @@
 const express = require("express")
-const { handleNewStudent, removeStudent, handleGetAllStudents, getStudentByEmail, handleLogin, handleNewAdmin } = require("../controllers/student")
+const { handleNewStudent, removeStudent, handleGetAllStudents, getStudentByEmail, handleLogin, handleNewAdmin, handleReloads } = require("../controllers/student")
 const router = express.Router()
 const Student = require("../models/student");
 
@@ -10,6 +10,7 @@ const Student = require("../models/student");
     router.get('/students/email/:email', getStudentByEmail)
     router.post('/logininfo',handleLogin)
     router.post('/admins', handleNewAdmin)
+    router.get('/api/me', handleReloads)
 
   
 

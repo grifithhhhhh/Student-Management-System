@@ -15,6 +15,7 @@ const { restrictToLoggedinUserOnly } = require("./middlewares/auth")
     credentials: true
     }));
     app.use(createLogs("log.txt"));
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(cookieParser())
 
