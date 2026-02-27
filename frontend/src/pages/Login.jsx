@@ -7,7 +7,7 @@ import useStudentStore from '../store/useStudentStore';
 const Login = () => {
 
 const loginStudent = useStudentStore((state) => state.loginStudent);
-const { loginAdmin } = useStudentStore();
+const  loginAdmin  = useStudentStore((state) =>state.loginAdmin);
 const navigate = useNavigate()
 
   const [student, setstudent] = useState({
@@ -30,7 +30,6 @@ const navigate = useNavigate()
 
   try {
     
-
     const response = await axios.post(
       "http://localhost:8004/logininfo",
       student,{ withCredentials: true }
@@ -44,6 +43,7 @@ const navigate = useNavigate()
      if(student.role === "student"){
       navigate('/student')
       loginStudent(response.data.student, "student")
+      
      }
     }
 

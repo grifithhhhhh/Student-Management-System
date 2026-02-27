@@ -7,7 +7,7 @@ const  mongoose = require("mongoose")
 const studentRouter = require("./routes/studentRoutes")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { restrictToLoggedinUserOnly } = require("./middlewares/auth")
+
 
 // Middleware--------------------------------------
     app.use(cors({

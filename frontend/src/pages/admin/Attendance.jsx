@@ -5,14 +5,10 @@ import { useEffect } from 'react'
 import useStudentStore from "../../store/useStudentStore";
 
 const Attendance = () => {
-  const student = useStudentStore((state) => state.student);
-  if (!student) {
+  const students = useStudentStore((state) => state.students);
+  if (!students) {
   return null; // or return a loader
 }
-
-console.log("student:",student.admin);
-console.log("StudentInfo",student.StudentData)
-
 
   return (
     <div className='bg-white border-4 w-full h-full mr-5 rounded-3xl flex flex-col p-5 '>
@@ -22,7 +18,7 @@ console.log("StudentInfo",student.StudentData)
       </div>
       
       <div className='flex h-fit '>
-        {student.StudentData.map(function(elem){
+        {students.map(function(elem){
         return(
           
           

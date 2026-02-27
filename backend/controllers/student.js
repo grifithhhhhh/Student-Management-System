@@ -2,40 +2,8 @@
 const Student = require("../models/student");
 const Admin = require("../models/admin")
 const {generateToken,verifyToken} = require("../services/auth")
-
+const bcrypt = require("bcrypt");
 // NEW STUDENTS--------------------------------------------------------------
-
-async function handleReloads(req, res) {
-    console.log("handleReload is working");
-
-    const token = req.cookies?.token;
-
-    if (!token) {
-        console.log("No token found in cookies");
-        return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const user = verifyToken(token);
-
-    if (!user) {
-        console.log("Token invalid or expired");
-        return res.status(401).json({ message: "User not found" });
-    }
-
-    const { email, role } = user;
-    console.log("user from handleReload: ", user);
-
-    if (role === "student") {
-        const student = await Student.findOne({ email });
-        return res.status(200).json({ student });
-    }
-
-    if (role === "admin") {
-        const admin = await Admin.findOne({ email });
-        const allStudent = await Student.find({});
-        return res.status(200).json({ Data: { admin, StudentData: allStudent } });
-    }
-}
 
 async function handleNewStudent (req,res) {
     const body = req.body
@@ -50,19 +18,28 @@ async function handleNewStudent (req,res) {
     ){
         return res.status(400).json({msg: "All fields are required"})
     }
+    try{
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(body.password,saltRounds);
 
-    const newStudent = await Student.create({
+        const newStudent = await Student.create({
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         imgURL: body.imgURL,
         courses: body.courses,
         attendance: body.attendance,
 
-    })
-        return res.status(201).json(newStudent)
+    });
+      const {password: pwd, ...safeStudent } = newStudent.toObject()
+      return res.status(201).json(safeStudent)
+    
+    }catch(err) {
+      return res.status(500).json({ msg: err.message });
+    }
+    
 }
 
 async function handleNewAdmin (req,res) {
@@ -78,19 +55,26 @@ async function handleNewAdmin (req,res) {
     ){
         return res.status(400).json({msg: "All fields are required"})
     }
-
-    const admin = await Admin.create({
+    try{
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(body.password, saltRounds)
+      const newAdmin = await Admin.create({
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         imgURL: body.imgURL,
-        courses: body.courses,
-        attendance: body.attendance,
 
-    })
-        return res.status(201).json(admin)
+    });
+    const {password : pwd, ...safeAdmin} = newAdmin.toObject()
+    return res.status(201).json(safeAdmin)
+
+    }catch(err){
+      return res.status(500).json({ msg: err.message });
+    }
+    
+        
 }
 // DELETE STUDENT ----------------------------------------------------------------
 async function removeStudent (req,res) {
@@ -139,21 +123,26 @@ async function handleLogin(req,res) {
         if (!student) {
         return res.status(404).json({ msg: "Student not found" });
       }
-
-      if (student.password !== password) {
+      const isMatch = await bcrypt.compare(password, student.password);
+      console.log("is match: ", isMatch)
+      console.log("password: ", password)
+      console.log("admin: ", student.password)    
+      if (!isMatch) {
         return res.status(401).json({ msg: "Wrong password" });
       }
-
         //create jwt 
       const token = generateToken(student,role);
-
+      console.log(token)
     // send this token to browser
-        res.cookie("token", token);
-        console.log(token)
-        console.log("student : ", student);
-        console.log("email : ",student.email);
+      res.cookie("token", token,{
+        httpOnly: true,
+        secure: false,   
+        sameSite: "lax",
+      });
+      const {password  : pwd, ...safeStudent } = student.toObject()
+      console.log("safeStudent: ",safeStudent)
+      return res.status(200).json({student: safeStudent})
       
-      return res.status(200).json({msg: "worked correctly", token:token, student:student})
   }
   
   if(role === "admin") {
@@ -161,22 +150,30 @@ async function handleLogin(req,res) {
   if (!admin) {
     return res.status(404).json({ msg: "Student not found" });
   }
-
-  if (admin.password !== password) {
-    return res.status(401).json({ msg: "Wrong password" });
-  }
+  const isMatch = await bcrypt.compare(password, admin.password);
+  console.log("password: ", password)
+  console.log("admin: ", admin.password)
+      if (!isMatch) {
+        return res.status(401).json({ msg: "Wrong password" });
+      }
+  
 
     //create jwt 
    const token = generateToken(admin,role);
 
  // send this token to browser
-    res.cookie("token", token);
-    //console.log(token);
-    //console.log("admin : ", admin);
-    //console.log("email : ",admin.email);
+    res.cookie("token", token,{
+        httpOnly: true,
+        secure: false,   
+        sameSite: "lax",
+      });
     const allStudent = await Student.find({});
-  
-    return res.status(200).json({msg: "worked correctly", token:token, Data: {admin:admin,StudentData: allStudent}})
+    const safeStudents = allStudent.map(student => {
+    const { password : pwd, ...s } = student.toObject();
+    return s;
+  }); 
+  const {password : pwd, ...safeAdmin } = admin.toObject()
+    return res.status(200).json({Data: {admin:safeAdmin,StudentData: safeStudents}})
   }
   
   }
@@ -190,5 +187,4 @@ module.exports = {
     getStudentByEmail,
     handleLogin,
     handleNewAdmin,
-    handleReloads,
 }

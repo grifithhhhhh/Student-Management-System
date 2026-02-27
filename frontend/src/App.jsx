@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import {Route, Routes} from 'react-router-dom'
 import Admin from './pages/admin'
@@ -12,13 +12,35 @@ import AddStudent from './pages/admin/StudentInfo/AddStudent'
 import StudentList from './pages/admin/StudentInfo/StudentList'
 import StudentShowCard from './pages/admin/StudentInfo/StudentShowCard'
 import Login from './pages/Login'
+import api from "./api";
+import useStudentStore from "./store/useStudentStore";
+import { useNavigate } from 'react-router-dom'
+
 
 
 
 function App() {
-  
+  const logout = useStudentStore((state) => state.logout);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        await api.get("/check-auth");
+      } catch (error) {
+        if (error.response?.status === 401) {
+          logout();
+          navigate("/");
+        }
+      }
+    };
+
+    verifyUser();
+  }, []);
+
   return (
-        <div>
+    <div>
+       <div>
          
           <Routes>
             <Route path='/' element={<Login/>} />
@@ -38,9 +60,9 @@ function App() {
             </Route>
           </Routes>
         </div>
-    )
-    
-  
+    </div>
+  );
+
 }
 
 export default App;

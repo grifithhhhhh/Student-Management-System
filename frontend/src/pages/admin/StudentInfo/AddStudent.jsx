@@ -66,7 +66,9 @@ const [attendance, setattendance] = useState(initialAttendance)
     }
     console.log("finalStudent :", finalStudent)
 
-    const response = await axios.post("http://localhost:8004/students", finalStudent)
+    const response = await axios.post("http://localhost:8004/students", finalStudent, {
+  withCredentials: true,
+})
 console.log(useStudentStore.getState());
     addStudent(response.data);
 console.log(useStudentStore.getState());

@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import useStudentStore from "../../../store/useStudentStore";
+import api from "../../../api"
 
 
 const StudentShowCard = () => {
@@ -10,12 +11,29 @@ const StudentShowCard = () => {
   if (!students) {
   return null; // or return a loader
 }
-  
-  const deleteStudent = async (id) => {
+
+/*  Safe code if api crashes
+const deleteStudent = async (id) => {
     try {
       const response = await axios.delete(
         `http://localhost:8004/students/${id}`
-      );
+      ,{
+  withCredentials: true,
+});
+
+      if (response.status === 200) {
+        removeStudentFromStore(id); // ✅ update Zustand
+        console.log("Deleted entry with id:", id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ */
+
+  const deleteStudent = async (id) => {
+    try {
+      const response = await api.delete(`/students/${id}`);
 
       if (response.status === 200) {
         removeStudentFromStore(id); // ✅ update Zustand

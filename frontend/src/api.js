@@ -1,7 +1,10 @@
 import axios from "axios";
+import useStudentStore from "./store/useStudentStore"
 
-const API = axios.create({
-  baseURL: "http://localhost:8004",
+
+const api = axios.create({
+    baseURL: "http://localhost:8004",
+    withCredentials : true,
 });
 
-export default API;
+export default api;
