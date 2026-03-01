@@ -10,7 +10,7 @@ const {restrictToLoggedinUserOnly} = require("../middlewares/auth")
     router.get('/students',restrictToLoggedinUserOnly, handleGetAllStudents)
     router.get('/students/email/:email',restrictToLoggedinUserOnly, getStudentByEmail)
     router.post('/logininfo',handleLogin)
-    router.post('/admins', handleNewAdmin)
+    router.post('/admins',restrictToLoggedinUserOnly, handleNewAdmin)
     router.patch('/students/:email', testpatchStudent)
 
     router.get("/check-auth", restrictToLoggedinUserOnly, (req, res) => {

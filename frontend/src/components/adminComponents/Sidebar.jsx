@@ -30,8 +30,8 @@ const { logout } = useStudentStore();
            </div>
            <div className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'><Link to='attendance' >Attendance</Link></div>
            <div className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'><Link to='studentinfo' >Students</Link></div>
-            <h1 className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'>Settings</h1>
-            <h1 className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'>Help</h1>
+           <div className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'><Link to='courses' >Courses</Link></div>
+           <div className=' flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'><Link to='about' >About</Link></div>
             <h1 className='flex bg-amber-300  hover:bg-purple-400 hover:border-white border-black border-2 rounded-3xl w-full p-2 items-center justify-center'><Link onClick={logoutSession} to='/' >Logout</Link></h1>
         </div>
         

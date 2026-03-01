@@ -32,6 +32,9 @@ const studentSchema = new mongoose.Schema({
     courses: [{
         courseName: String,
         credits : Number,
+        totalClasses: Number,
+        attendedClasses: Number,
+        percentage: Number,
     }],
     attendance: {
         totalClasses: Number,
