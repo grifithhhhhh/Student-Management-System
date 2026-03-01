@@ -11,18 +11,13 @@ const Attendance = () => {
 }
 
   return (
-    <div className='bg-white border-4 w-full h-full mr-5 rounded-3xl flex flex-col p-5 '>
-
-      <div className='bg-amber-300 w-full h-fit p-4 rounded-3xl'>
-        <h1 className='text-7xl font-extrabold  text-black '> Welcome to Attendance Section </h1>
-      </div>
-      
-      <div className='flex h-fit '>
+    <div className='bg-amber-50 rounded-3xl w-full  border-4 mr-5 '>
+      <div className=' w-200 p-5 flex flex-col gap-3'>
+         <h1 className='text-7xl font-extrabold  text-black '> Welcome to Attendance Section </h1>
+        <div className=' bg-amber-950 w-full flex flex-row p-5 gap-3 h-80 overflow-x-scroll rounded-3xl '>
         {students.map(function(elem){
         return(
-          
-          
-          <div className=' bg-black w-50 h-60 text-white rounded-3xl flex flex-col m-4 justify-center gap-3 items-center'>
+          <div className=' bg-black min-w-50 h-60 text-white rounded-3xl flex flex-col justify-center gap-3 items-center '>
 
               {elem.courses.map((course) => (
               <div className='flex justify-center items-center' key={course._id}>
@@ -41,6 +36,8 @@ const Attendance = () => {
           </div>
         )
       })}
+      </div>   
+    
       </div>
     </div>
   )

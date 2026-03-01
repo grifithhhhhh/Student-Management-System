@@ -2,7 +2,7 @@ import React from 'react'
 import Card from '../../components/adminComponents/Card'
 const Dashboard = () => {
   return (
-    <div className='bg-[#634cce]  p-2  w-fit h-full mr-5 rounded-2xl'>
+    <div className='bg-[#634cce]  p-2  w-full h-full mr-5 rounded-2xl'>
 
       <div className='bg-black p-4 mb-8 rounded-3xl' >
         <h1 className=' text-8xl text-white font-extrabold '>This is Dashboard with Fake Stats</h1>

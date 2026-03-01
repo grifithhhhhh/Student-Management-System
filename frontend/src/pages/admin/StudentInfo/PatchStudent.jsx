@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import useStudentStore from '../../../store/useStudentStore'
 
-const AddStudent = () => {
+const PatchStudent = () => {
 
-  const { addStudent } = useStudentStore();
+  const { editStudent } = useStudentStore();
 
   const initialStudent = {
   firstName: "",
@@ -30,8 +30,9 @@ const initialAttendance = {
 
 const [student, setstudent] = useState(initialStudent)
 const [courses, setcourses] = useState([])
-const [courseInput, setcourseInput] = useState(initialCourse)
 const [attendance, setattendance] = useState(initialAttendance)
+const [courseInput, setcourseInput] = useState(initialCourse)
+const [Email, setEmail] = useState("")
 
   const handleCoursesClicked = (e)=> {
     setcourseInput({
@@ -39,7 +40,9 @@ const [attendance, setattendance] = useState(initialAttendance)
       [e.target.name] : e.target.value
     })
   }
-
+  const handleEmail = (e) =>{
+    setEmail(e.target.value)
+  }
   const handleAttandace = (e) => {
     setattendance({
       ...attendance,
@@ -60,7 +63,18 @@ const [attendance, setattendance] = useState(initialAttendance)
   return updated;              // return new array
 });
   }
-  const submitCourse = async (e) =>{
+
+  const removeEmptyFields = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, value]) =>
+        value !== "" &&
+        value !== null &&
+        value !== undefined
+    )
+  );
+};
+ const submitCourse = async (e) =>{
     e.preventDefault();
 
     if (!courseInput.courseName || !courseInput.credits) return;
@@ -74,29 +88,34 @@ const [attendance, setattendance] = useState(initialAttendance)
 
   const btnClicked = async (e)=>{
     e.preventDefault();
-    console.log(student)
-    console.log(courses)
-    console.log(attendance)
+    const cleanedStudents = removeEmptyFields(student)
+    const cleanedCourses = removeEmptyFields(courseInput)
+    const cleanedAttendance = removeEmptyFields(attendance)
+    console.log(cleanedStudents)
+    console.log(cleanedCourses)
+    console.log(cleanedAttendance)
+    console.log(Email)
     
     
 try{
     const finalStudent = {
-      ...student,
+      ...cleanedStudents,
       courses: courses,
-      attendance: attendance
+      attendance: cleanedAttendance
     }
     console.log("finalStudent :", finalStudent)
 
-    const response = await axios.post("http://localhost:8004/students", finalStudent, {
+    const response = await axios.patch(`http://localhost:8004/students/${Email}`, finalStudent, {
       withCredentials: true,
     })
-    console.log(useStudentStore.getState());
-    addStudent(response.data);
-    console.log(useStudentStore.getState());
+    console.log("before edit:",useStudentStore.getState());
+    await editStudent(response.data);
+    console.log("after edit",useStudentStore.getState());
     
     setstudent(initialStudent)
     setcourses([])
     setattendance(initialAttendance)
+    setEmail('')
     console.log(response)
 }catch(error){
   alert("Error: Either the email is taken or fill all the fields " );
@@ -106,9 +125,19 @@ try{
     
   }
   return (
-    <div className='bg-pink-300 border-4 p-5 h-full rounded-3xl flex  justify-center overflow-y-auto '>
-        <form onSubmit={btnClicked} className='flex flex-col gap-3'>
-          <h1 className='text-3xl mb-2 font-bold '>Please Fill Student Info</h1>
+    <div className='bg-blue-300 border-4 p-5 h-full rounded-3xl flex  justify-center overflow-y-auto  '>
+        <form onSubmit={btnClicked} className='flex flex-col gap-3 m-4'>
+         <div className='flex gap-5'>
+           <h1 className='text-3xl mb-2 font-bold '>Edit by Email</h1>
+          <input 
+          name='email'
+          onChange={handleEmail}
+          value={Email}
+          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
+          type="text" 
+          placeholder='Original Email' />
+         </div>
+          
 
           <div>
             <input 
@@ -117,7 +146,7 @@ try{
           value={student.firstName}
           className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
           type="text" 
-          placeholder='First Name' />
+          placeholder='New First Name' />
 
           <input 
           name='lastName'
@@ -125,7 +154,7 @@ try{
           value={student.lastName}
           className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
           type="text" 
-          placeholder='Last Name' />
+          placeholder='New Last Name' />
 
           <input 
           name='gender'
@@ -133,7 +162,7 @@ try{
           value={student.gender}
           className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
           type="text" 
-          placeholder='Gender' />
+          placeholder='New Gender' />
 
           </div>
 
@@ -145,7 +174,7 @@ try{
           value={student.email}
           className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
           type="text" 
-          placeholder='Email' />
+          placeholder='New Email' />
           
           <input 
           name='password'
@@ -157,7 +186,7 @@ try{
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          placeholder='Password' />
+          placeholder='New Password' />
          </div>
 
           <input 
@@ -166,7 +195,7 @@ try{
           value={student.imgURL}
           className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
           type="text" 
-          placeholder='Image Url' />
+          placeholder='New Image Url' />
 
         <div className='flex '> 
           <input type="text"
@@ -189,24 +218,24 @@ try{
         <div>
           {courses.map(function(elem,idx){
             return( <div className='flex w-full gap-4 mb-2'>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{courses[idx].courseName}</h1>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{courses[idx].credits}</h1>
+            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{elem.courseName}</h1>
+            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{elem.credits}</h1>
             <button onClick={()=> {deleteCourse(idx)}} className='bg-red-500 border w-full border-black text-white text-xl p-2 rounded-2xl mt-auto' >Delete</button>
             </div>)
           })}
         </div>
 
         <div>
-          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='Total Classes' />
-          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='Attended Classes' />
-          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='Percentage'/>
+          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='New Total Classes' />
+          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='New Attended Classes' />
+          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='New Percentage'/>
         </div>
 
 
-          <button type='submit' className='bg-green-500 border-2 border-black text-white text-xl p-2 rounded-2xl mt-auto --4'>Add student</button>
+          <button type='submit' className='bg-green-500 border-2 border-black text-white text-xl p-2 rounded-2xl mb-4 mt-auto --4'>Add student</button>
         </form>
       </div> 
   )
 }
 
-export default AddStudent
+export default PatchStudent

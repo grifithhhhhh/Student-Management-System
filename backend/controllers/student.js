@@ -5,10 +5,70 @@ const {generateToken,verifyToken} = require("../services/auth")
 const bcrypt = require("bcrypt");
 // NEW STUDENTS--------------------------------------------------------------
 
+async function testpatchStudent(req,res){
+  const body = req.body
+  const email = req.params.email
+
+   if(body.password){
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(body.password, saltRounds) 
+    body.password = hashedPassword
+  }
+
+  const oldStudent = await Student.findOneAndUpdate({email: email},body,{new: true})
+  if (!oldStudent) {
+  return res.status(404).json({ msg: "Student not found" });
+}
+  const {password : pwd, ...safeStudent } = oldStudent.toObject()
+  console.log("safeStudent: ",safeStudent)
+  return res.status(200).json(safeStudent)
+}
+
+
+async function patchStudent(req,res) {
+    const email = req.params.email
+    const updatedbody = {...req.body}
+
+    if(updatedbody.password){
+    const saltRounds = 10;
+    updatedbody.password = await bcrypt.hash(updatedbody.password,saltRounds);
+
+    try{
+      const newStudent = await Student.findOneAndUpdate(
+      {email: email},
+      {body},
+      {new : true}
+    )
+    
+    const {password: pwd, ...safeStudent } = newStudent.toObject()
+    return res.status(201).json(safeStudent)
+    }catch(error){
+      return res.status(500).json({ msg: error.message });
+    }
+    }
+
+
+try{
+      const newStudent = await Student.findOneAndUpdate(
+      {email},
+      {body},
+      {new : true}
+    )
+    
+    
+    return res.status(201).json(newStudent)
+}catch(error){
+    return res.status(500).json({ msg: error.message });
+}
+   
+}
+
 async function handleNewStudent (req,res) {
     const body = req.body
 
-    if (
+    
+    try{
+      if (
         !body ||
         !body.firstName ||
         !body.lastName ||
@@ -16,9 +76,9 @@ async function handleNewStudent (req,res) {
         !body.email ||
         !body.password
     ){
+        console.log("all fields are required")
         return res.status(400).json({msg: "All fields are required"})
     }
-    try{
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(body.password,saltRounds);
 
@@ -71,7 +131,7 @@ async function handleNewAdmin (req,res) {
     return res.status(201).json(safeAdmin)
 
     }catch(err){
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: "either the email is taken or fill all inputs" });
     }
     
         
@@ -187,4 +247,6 @@ module.exports = {
     getStudentByEmail,
     handleLogin,
     handleNewAdmin,
+    patchStudent,
+    testpatchStudent,
 }

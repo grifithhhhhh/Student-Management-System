@@ -19,6 +19,7 @@ import Assignments from "./pages/studentPages/Assignments"
 import StudentAttendance from './pages/studentPages/StudentAttendance'
 import StudentDashboard from './pages/studentPages/studentDashboard'
 import StudentWelcome from './pages/studentPages/StudentWelcome'
+import PatchStudent from './pages/admin/StudentInfo/PatchStudent'
 
 
 
@@ -62,6 +63,7 @@ function App() {
                     <Route path='studentinfo' element={<StudentInfo/>}>
                     <Route index element={<StudentInfoPage/>}/>
                     <Route path='add' element={<AddStudent/>}/>
+                    <Route path='editStudent' element={<PatchStudent/>}/>
                     <Route path='showlist' element={<StudentList/>}/>
                     <Route path='showcard' element={<StudentShowCard/>}/>
                     </Route>

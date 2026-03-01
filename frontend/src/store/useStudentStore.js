@@ -37,6 +37,15 @@ const useStudentStore = create(
           students: [...state.students, newStudent],
         })),
 
+      editStudent: (updatedStudent) =>
+        set((state) => ({
+          students: state.students.map((student) =>
+            student._id === updatedStudent._id
+              ? { ...student, ...updatedStudent }
+              : student
+          ),
+        })),
+
       deleteStudent: (studentId) =>
         set((state) => ({
           students: state.students.filter(

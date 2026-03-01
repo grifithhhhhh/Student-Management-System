@@ -9,12 +9,15 @@ const Login = () => {
 const loginStudent = useStudentStore((state) => state.loginStudent);
 const  loginAdmin  = useStudentStore((state) =>state.loginAdmin);
 const navigate = useNavigate()
-
-  const [student, setstudent] = useState({
+const initialErrors = ""
+const initialUser = {
     email: "",
     password: "",
     role: ""
-  })
+  }
+
+const [LoginErrors, setLoginErrors] = useState(initialErrors)
+const [student, setstudent] = useState(initialUser)
 
   
   const handleClick = (e)=>{
@@ -38,7 +41,8 @@ const navigate = useNavigate()
     if(response.status === 200){
      if(student.role === "admin"){
       navigate('/admin')
-      loginAdmin(response.data.Data);
+      loginAdmin(response.data.Data)
+      console.log("admin login success");
      }
      if(student.role === "student"){
       navigate('/student')
@@ -48,6 +52,9 @@ const navigate = useNavigate()
     }
 
   } catch (error) {
+    console.log("Errro by me: ", error.response?.data.msg)
+    setLoginErrors(error.response?.data.msg)
+    setstudent(initialUser)
     console.log("Error:", error.response?.data || error.message);
   }
 };
@@ -65,7 +72,7 @@ const navigate = useNavigate()
                 </h1>
                 <h1 className='text-2xl text-gray-400 mb-10 '>Enter your details below</h1>
               
-                <form  className=' flex flex-col p-4 w-80 h-80' action="">
+                <form  onSubmit={()=> {console.log("form submited")}} className=' flex flex-col p-4 w-80 h-80' action="">
                 <div className='flex w-full gap-6 mb-4 '>
                   
                        <div className="flex gap-4">
@@ -107,9 +114,10 @@ const navigate = useNavigate()
 </div>
               
                 </div>
-                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="text" onChange={handleClick} name='email' placeholder='Email' />
+                <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' type="text" value={student.email} onChange={handleClick} name='email' placeholder='Email' />
                 <input className='w-full text-xl border-2 rounded-2xl mb-4 p-2' 
                       type="password" 
+                      value={student.password}
                       autoComplete="off"
                       spellCheck={false}
                       autoCorrect="off"
@@ -117,7 +125,10 @@ const navigate = useNavigate()
                       onChange={handleClick} 
                       name='password' 
                       placeholder='Password' />
-                <button className='w-full bg-black text-white text-xl  rounded-2xl mb-4 p-2' onClick={buttonClicked}>Log in</button>
+                <button className='w-full bg-black text-white text-xl hover:bg-green-400 hover:border-2 hover:border-black cursor-pointer   rounded-2xl mb-4 p-2' onClick={buttonClicked}>Log in</button>
+                <div className='flex justify-center items-center'>
+                  <h1 value={LoginErrors} className='text-2xl text-red-400 font-bold'>{LoginErrors}</h1>
+                </div>
                 </form>
 
             </div>

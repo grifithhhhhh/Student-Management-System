@@ -1,5 +1,5 @@
 const express = require("express")
-const { handleNewStudent, removeStudent, handleGetAllStudents, getStudentByEmail, handleLogin, handleNewAdmin,  } = require("../controllers/student")
+const { handleNewStudent, removeStudent, handleGetAllStudents, getStudentByEmail, handleLogin, handleNewAdmin, patchStudent, testpatchStudent,  } = require("../controllers/student")
 const router = express.Router()
 const Student = require("../models/student");
 const {restrictToLoggedinUserOnly} = require("../middlewares/auth")
@@ -11,6 +11,7 @@ const {restrictToLoggedinUserOnly} = require("../middlewares/auth")
     router.get('/students/email/:email',restrictToLoggedinUserOnly, getStudentByEmail)
     router.post('/logininfo',handleLogin)
     router.post('/admins', handleNewAdmin)
+    router.patch('/students/:email', testpatchStudent)
 
     router.get("/check-auth", restrictToLoggedinUserOnly, (req, res) => {
             res.status(200).json({

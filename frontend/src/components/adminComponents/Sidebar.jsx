@@ -21,7 +21,7 @@ const { logout } = useStudentStore();
   
   
   return (
-    <div className='flex flex-col w-1/6 bg-black  p-4 gap-3  text-black font-bold rounded-3xl m-5 '>
+    <div className='flex flex-col w-70 bg-black  p-4 gap-3  text-black font-bold rounded-3xl m-5 '>
         <h1 className='text-3xl text-white '>Student Hub</h1>
 
         <div className=' h-fit flex mt-auto flex-col gap-3 p-2 justify-center items-center'>

@@ -2,11 +2,13 @@ import React from 'react'
 import axios from 'axios'
 import useStudentStore from "../../../store/useStudentStore";
 import api from "../../../api"
+import {useNavigate} from 'react-router-dom'
 
 
 const StudentShowCard = () => {
   const students = useStudentStore((state) => state.students);
   const removeStudentFromStore = useStudentStore((state) => state.deleteStudent);
+  const navigate = useNavigate();
 
   if (!students) {
   return null; // or return a loader
@@ -43,6 +45,10 @@ const deleteStudent = async (id) => {
       console.log(error);
     }
   };
+  
+  const editStudent = async(id) =>{
+    navigate("/admin/studentinfo/editStudent");
+  }
 
   
 
@@ -59,7 +65,10 @@ const deleteStudent = async (id) => {
               <h1 className=' text-2xl font-bold '>{elem.firstName} {elem.lastName}</h1>
               <h1 className=' text-xl '>{elem.gender}</h1>
               <h1 className=' text-xl line-clamp-1 '>{elem.email}</h1>
-              <button onClick={()=> {deleteStudent(elem._id)}} className='bg-red-400 text-white text-xl p-2 rounded-2xl mt-auto --4'>Remove Student</button>
+              <div className='mt-auto flex w-full gap-3 '>
+                <button onClick={editStudent} className='bg-green-400 text-white text-xl p-2 rounded-2xl w-full '>Edit</button>
+              <button onClick={()=> {deleteStudent(elem._id)}} className='bg-red-400 text-white text-xl w-full  p-2 rounded-2xl '>Delete</button>
+              </div>
             </div>
           )
         })}
