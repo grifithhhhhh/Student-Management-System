@@ -32,8 +32,8 @@ const Courses = () => {
             ))}
         </div>
 
-    <div className='bg-amber-300 p-3 w-full h-full rounded-3xl'>
-      <h1>Name lastName totalClasses Attendedcourse percentage</h1>
+    <div className='bg-amber-300 p-3 w-full h-full rounded-3xl '>
+      <h1 className='text-2xl font-bold mb-3'>Name lastName totalClasses Attendedcourse percentage</h1>
         {students
           .filter(student =>
             student.courses?.some(course => course.courseName === `${selectedCourse}`)
@@ -47,7 +47,7 @@ const Courses = () => {
         return (
           <div key={student._id}>
             
-            <h1>
+            <h1 className=' font-bold '>
               {student.firstName} {student.lastName} — {matchedCourse.totalClasses} {matchedCourse.attendedClasses} {matchedCourse.percentage}
             </h1>
           </div>

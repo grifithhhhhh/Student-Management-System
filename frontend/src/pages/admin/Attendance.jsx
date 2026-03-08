@@ -23,17 +23,6 @@ const Attendance = () => {
                 <h2 className='text-3xl font-bold'>{course.courseName}</h2>
               </div>
             ))}
-            <div>
-              <div className='bg-amber-400 text-3xl rounded-full flex justify-center items-center w-25 h-25'>
-              <h1>{elem.attendance.percentage}</h1>
-            </div>
-            <div className='flex flex-col justify-center items-center'>
-            <h1>Total Classes : {elem.attendance.totalClasses}</h1>
-            <h1>Attended Classes :{elem.attendance.attendedClasses}</h1>
-            </div>
-            </div>
-
-
           </div>
 
           

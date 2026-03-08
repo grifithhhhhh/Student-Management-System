@@ -1,3 +1,4 @@
+
 const express = require("express")
 const { handleNewStudent, removeStudent, handleGetAllStudents, getStudentByEmail, handleLogin, handleNewAdmin, patchStudent, testpatchStudent,  } = require("../controllers/student")
 const router = express.Router()
@@ -5,12 +6,12 @@ const Student = require("../models/student");
 const {restrictToLoggedinUserOnly} = require("../middlewares/auth")
 
 // ACTUAL ROUTES------------------------------------------
-    router.post('/students',restrictToLoggedinUserOnly, handleNewStudent)
-    router.delete('/students/:id',restrictToLoggedinUserOnly, removeStudent)
-    router.get('/students',restrictToLoggedinUserOnly, handleGetAllStudents)
-    router.get('/students/email/:email',restrictToLoggedinUserOnly, getStudentByEmail)
+    router.post('/students', handleNewStudent)
+    router.delete('/students/:id', removeStudent)
+    router.get('/students', handleGetAllStudents)
+    router.get('/students/email/:email', getStudentByEmail)
     router.post('/logininfo',handleLogin)
-    router.post('/admins',restrictToLoggedinUserOnly, handleNewAdmin)
+    router.post('/admins', handleNewAdmin)
     router.patch('/students/:email', testpatchStudent)
 
     router.get("/check-auth", restrictToLoggedinUserOnly, (req, res) => {

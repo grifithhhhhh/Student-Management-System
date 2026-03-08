@@ -5,6 +5,8 @@ const fs = require("fs")
 const {createLogs} = require("./middlewares/log")
 const  mongoose = require("mongoose")
 const studentRouter = require("./routes/studentRoutes")
+const courseRouter = require("./routes/courseRoutes")
+const assignmentRouter = require("./routes/assignmentRoutes")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -26,8 +28,10 @@ const cookieParser = require("cookie-parser");
     
 // ROUTES -----------------------------
    app.use('/', studentRouter)
+   app.use('/', courseRouter)
+   app.use('/', assignmentRouter)
+
 
 // SERVER -------------------------------------------------------
     app.listen(PORT, ()=> {console.log("Server started @ : ", PORT)})
     console.log("welcome to student management system")
-

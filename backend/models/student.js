@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose")
 
 const studentSchema = new mongoose.Schema({
@@ -29,18 +30,30 @@ const studentSchema = new mongoose.Schema({
         type: String,
     },
     
-    courses: [{
-        courseName: String,
-        credits : Number,
-        totalClasses: Number,
-        attendedClasses: Number,
-        percentage: Number,
-    }],
-    attendance: {
-        totalClasses: Number,
-        attendedClasses: Number,
-        percentage: Number,
-    },
+    courses:[
+        
+    {
+        course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",  
+        },
+        
+        totalClasses: {
+        type: Number,
+        default: 0
+        },
+        
+        attendedClasses: {
+        type: Number,
+        default: 0
+        },
+        
+        marks: {
+        type: Number,
+        default: 0
+    }
+    }
+],
 }, {timestamps: true})
 
 
