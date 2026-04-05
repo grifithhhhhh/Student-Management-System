@@ -6,6 +6,8 @@ const useStudentStore = create(
     (set) => ({
       // 🔹 state
       students: [],
+      courses: [],
+      assignments: [],
       user: null,     // admin or student
       role: null,
 
@@ -15,6 +17,8 @@ const useStudentStore = create(
           user: backendData.admin,
           role: "admin",
           students: backendData.StudentData,
+          assignments: backendData.assignmentData,
+          courses: backendData.courseData
         }),
 
       // 🔹 STUDENT LOGIN (if needed)
@@ -37,6 +41,11 @@ const useStudentStore = create(
           students: [...state.students, newStudent],
         })),
 
+      addAssignment: (newAssignment) =>
+        set((state)=> ({
+          assignments: [...state.assignments, newAssignment]
+        })),
+
       editStudent: (updatedStudent) =>
         set((state) => ({
           students: state.students.map((student) =>
@@ -53,12 +62,21 @@ const useStudentStore = create(
           ),
         })),
 
+      deleteAssignment: (assignmentId) =>
+        set ((state) => ({
+          assignments: state.assignments.filter(
+          (assignment) => assignment._id !== assignmentId    
+          ),
+        })),
+
       // 🔹 logout
       logout: () =>
         set({
           user: null,
           role: null,
           students: [],
+          assignments: [],
+          courses: [],
         }),
     }),
     {

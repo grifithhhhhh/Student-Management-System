@@ -2,7 +2,63 @@
 const Course = require("../models/Courses");
 const Student = require("../models/student")
 
+async function enrollMultipleStudentsInSingleCourse(req, res) {
 
+  const { StudentsIds, CourseId } = req.body;
+
+  if (!StudentsIds || !CourseId) {
+    return res.status(400).json({ msg: "All fields are required" });
+  }
+
+  try {
+
+    const course = await Course.findById(CourseId);
+
+    if (!course) {
+      return res.status(404).json({ msg: "Course not found" });
+    }
+
+    const enrolledStudents = [];
+
+    for (const StudentId of StudentsIds) {
+
+      const student = await Student.findById(StudentId);
+
+      if (!student) continue;
+
+      const alreadyEnrolled = student.courses.some(
+        c => c.course.toString() === CourseId
+      );
+
+      if (alreadyEnrolled) continue;
+
+      course.students.push(StudentId);
+
+      student.courses.push({
+        course: CourseId,
+        totalClasses: 0,
+        attendedClasses: 0,
+        marks: 0
+      });
+
+      await student.save();
+
+      enrolledStudents.push(student);
+
+    }
+
+    await course.save();
+
+    return res.status(200).json({
+      msg: "Students enrolled successfully",
+      students: enrolledStudents
+    });
+
+  } catch (error) {
+    return res.status(500).json({ Error: error.message });
+  }
+
+}
 
 
 
@@ -56,6 +112,60 @@ async function handleNewCourse (req, res) {
         return res.status(400).json({error: error})
     }
 
+}
+async function enroleStudentInMultipleCourse(req,res) {
+    const {AppliedCourses, StudentId} = req.body
+
+    if(!StudentId || !AppliedCourses){                 
+        return res.status(400).json({msg: "All fields are required"})
+    }
+    try{
+           const student = await Student.findById(StudentId);
+    if (!student) {
+      return res.status(404).json({ msg: "Student not found" });
+    }
+      const skippedCourses = [];
+      const enrolledCourses = [];
+
+    for( const CourseId of AppliedCourses){
+
+    const course = await Course.findById(CourseId);
+    if (!course) {
+        skippedCourses.push({ CourseId, reason: "Course not found" });
+        continue;
+      }
+
+    const alreadyEnrolled = student.courses.some(
+      c => c.course.toString() === CourseId.toString()
+    );
+
+    if (alreadyEnrolled) {
+       skippedCourses.push({ CourseId, reason: "Already enrolled" });
+        continue;
+    }
+    
+    course.students.push(StudentId)
+
+    student.courses.push({
+      course: CourseId,
+      totalClasses: 0,
+      attendedClasses: 0,
+      marks: 0
+    });
+
+     await course.save();
+
+    }
+
+    await student.save();
+   
+    return res.status(200).json({
+      msg: "Student enrolled successfully",
+      Student: student
+    });
+    }catch(error){
+        return res.status(500).json({Error: error.message})
+    }
 }
 
 async function enroleStudentInCourse (req, res) {
@@ -171,5 +281,7 @@ module.exports = {
     deleteCourse,
     updateAttendance,
     updateMarks,
+    enroleStudentInMultipleCourse,
+    enrollMultipleStudentsInSingleCourse,
 }
     

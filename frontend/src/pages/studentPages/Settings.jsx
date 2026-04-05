@@ -1,6 +1,6 @@
 import React from 'react'
 
-const StudentAttendance = () => {
+const Settings = () => {
   return (
     <div className="relative w-full h-full rounded-3xl bg-[#07080d] flex flex-col items-center justify-center gap-4 overflow-hidden p-12">
 
@@ -20,7 +20,7 @@ const StudentAttendance = () => {
       {/* Title */}
       <h2 className="relative z-10 text-5xl font-extrabold text-white tracking-tight"
         style={{ fontFamily: "'Syne', sans-serif" }}>
-        Attendance
+        Settings
       </h2>
 
       {/* Subtitle */}
@@ -47,4 +47,4 @@ const StudentAttendance = () => {
   )
 }
 
-export default StudentAttendance
+export default Settings

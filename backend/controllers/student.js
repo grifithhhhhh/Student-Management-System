@@ -1,6 +1,8 @@
 
 const Student = require("../models/student");
 const Admin = require("../models/admin")
+const Course = require("../models/Courses")
+const Assignment = require("../models/Assignment")
 const {generateToken,verifyToken} = require("../services/auth")
 const bcrypt = require("bcrypt");
 // NEW STUDENTS--------------------------------------------------------------
@@ -74,7 +76,7 @@ async function handleNewStudent (req,res) {
         !body.lastName ||
         !body.gender ||
         !body.email ||
-        !body.password
+        !body.password 
     ){
         console.log("all fields are required")
         return res.status(400).json({msg: "All fields are required"})
@@ -208,7 +210,7 @@ async function handleLogin(req,res) {
   if(role === "admin") {
     const admin = await Admin.findOne({ email });
   if (!admin) {
-    return res.status(404).json({ msg: "Student not found" });
+    return res.status(404).json({ msg: "Admin not found" });
   }
   const isMatch = await bcrypt.compare(password, admin.password);
   console.log("password: ", password)
@@ -216,8 +218,6 @@ async function handleLogin(req,res) {
       if (!isMatch) {
         return res.status(401).json({ msg: "Wrong password" });
       }
-  
-
     //create jwt 
    const token = generateToken(admin,role);
 
@@ -227,13 +227,15 @@ async function handleLogin(req,res) {
         secure: false,   
         sameSite: "lax",
       });
+    const allCourses = await Course.find({})
     const allStudent = await Student.find({});
+    const allAssignments = await Assignment.find({})
     const safeStudents = allStudent.map(student => {
     const { password : pwd, ...s } = student.toObject();
     return s;
   }); 
   const {password : pwd, ...safeAdmin } = admin.toObject()
-    return res.status(200).json({Data: {admin:safeAdmin,StudentData: safeStudents}})
+    return res.status(200).json({Data: {admin:safeAdmin,StudentData: safeStudents, courseData: allCourses , assignmentData : allAssignments}})
   }
   
   }

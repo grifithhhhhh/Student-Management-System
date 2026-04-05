@@ -1,16 +1,14 @@
 import React from 'react'
 import Navbar from './Navbar'
 import Herosection from './Herosection'
-
+ 
 const NotSidebar = () => {
   return (
-    <div className=' rounded-3xl bg-amber-300 w-full h-full flex flex-col ml-5'>
-      <Navbar/>
-      <Herosection/>
-
-
+    <div className='flex flex-col flex-1 min-w-0 overflow-hidden bg-[#0d0f14]'>
+      <Navbar />
+      <Herosection />
     </div>
   )
 }
-
+ 
 export default NotSidebar

@@ -1,81 +1,91 @@
 import React from 'react'
-import axios from 'axios'
 import useStudentStore from "../../../store/useStudentStore";
 import api from "../../../api"
-import {useNavigate} from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom'
 
 const StudentShowCard = () => {
   const students = useStudentStore((state) => state.students);
   const removeStudentFromStore = useStudentStore((state) => state.deleteStudent);
   const navigate = useNavigate();
 
-  if (!students) {
-  return null; // or return a loader
-}
-
-/*  Safe code if api crashes
-const deleteStudent = async (id) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8004/students/${id}`
-      ,{
-  withCredentials: true,
-});
-
-      if (response.status === 200) {
-        removeStudentFromStore(id); // ✅ update Zustand
-        console.log("Deleted entry with id:", id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
- */
+  if (!students) return null;
 
   const deleteStudent = async (id) => {
     try {
       const response = await api.delete(`/students/${id}`);
-
       if (response.status === 200) {
-        removeStudentFromStore(id); // ✅ update Zustand
+        removeStudentFromStore(id);
         console.log("Deleted entry with id:", id);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
-  const editStudent = async(id) =>{
-    navigate("/admin/studentinfo/editStudent");
-  }
 
-  
+  const editStudent = async (id) => {
+    navigate("/admin/studentinfo/editStudent");
+  };
 
   return (
-    <div className=' w-full  bg-amber-500 h-full border-4 rounded-3xl mr-4 p-4 flex flex-col justify-center items-center '>
+    <div className="p-6 w-full h-full">
 
-      <h1 className='text-3xl font-bold justify-start text-white text-stroke '>Students Info</h1>
-     
-      <div className=' w-200 overflow-x-scroll flex'>
-            {students.map(function(elem){
-          return (
-            <div key={elem._id} className='bg-amber-300 min-w-60 h-80 rounded-2xl border-black border-2 text-black p-4  m-3 flex flex-col  '>
-              <img className='bg-white border-black border-2 w-25 h-25 rounded-2xl mb-3 object-cover' src={elem.imgURL} alt="" />
-              <h1 className=' text-2xl font-bold '>{elem.firstName} {elem.lastName}</h1>
-              <h1 className=' text-xl '>{elem.gender}</h1>
-              <h1 className=' text-xl line-clamp-1 '>{elem.email}</h1>
-              <div className='mt-auto flex w-full gap-3 '>
-                <button onClick={editStudent} className='bg-green-400 text-white text-xl p-2 rounded-2xl w-full '>Edit</button>
-              <button onClick={()=> {deleteStudent(elem._id)}} className='bg-red-400 text-white text-xl w-full  p-2 rounded-2xl '>Delete</button>
-              </div>
+      {/* Header */}
+      <div className="mb-6">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-semibold mb-1">Overview</p>
+        <h1 className="text-2xl font-semibold text-white tracking-tight">Students</h1>
+      </div>
+
+      {/* Cards grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {students.map((elem) => (
+          <div
+            key={elem._id}
+            className="bg-[#13161e] border border-white/5 rounded-2xl p-4 flex flex-col hover:border-white/10 transition-all group"
+          >
+            {/* Avatar / image */}
+            <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d0f14] border border-white/5 mb-3 flex-shrink-0">
+              {elem.imgURL ? (
+                <img
+                  className="w-full h-full object-cover"
+                  src={elem.imgURL}
+                  alt={elem.firstName}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-2xl font-semibold text-indigo-400">
+                    {elem.firstName?.[0]}{elem.lastName?.[0]}
+                  </span>
+                </div>
+              )}
             </div>
-          )
-        })}
-        </div>
-      
-    </div>
-  )
-}
 
-export default StudentShowCard
+            {/* Info */}
+            <h2 className="text-[13px] font-semibold text-slate-200 leading-tight truncate">
+              {elem.firstName} {elem.lastName}
+            </h2>
+            <p className="text-[11px] text-slate-500 mt-0.5 capitalize">{elem.gender}</p>
+            <p className="text-[11px] text-slate-600 mt-0.5 truncate">{elem.email}</p>
+
+            {/* Actions */}
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => editStudent(elem._id)}
+                className="flex-1 py-1.5 rounded-lg text-[11px] font-medium bg-indigo-600/10 text-indigo-400 border border-indigo-500/10 hover:bg-indigo-600/20 hover:border-indigo-500/20 transition-all"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => deleteStudent(elem._id)}
+                className="flex-1 py-1.5 rounded-lg text-[11px] font-medium bg-red-600/10 text-red-400 border border-red-500/10 hover:bg-red-600/20 hover:border-red-500/20 transition-all"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default StudentShowCard;

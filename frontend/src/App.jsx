@@ -22,6 +22,8 @@ import StudentWelcome from './pages/studentPages/StudentWelcome'
 import PatchStudent from './pages/admin/StudentInfo/PatchStudent'
 import About from './pages/admin/About'
 import Courses from './pages/admin/Courses'
+import AdminAssignments from './pages/admin/Assignments'
+import Settings from './pages/studentPages/Settings'
 
 
 
@@ -55,6 +57,7 @@ function App() {
             <Route path='studentDashboard' element={<StudentDashboard/>}/>
             <Route path='assignment' element={<Assignments/>}/>
             <Route path='studentattendance' element= {<StudentAttendance/>}/>
+            <Route path ='settings' element = {<Settings/>}/>
             </Route>
 
             <Route path='/admin' element={<Admin/>}>
@@ -62,6 +65,7 @@ function App() {
                     <Route path='dashboard' element={<Dashboard/>}/>
                     <Route path='attendance' element={<Attendance/>}/>
                     <Route path='courses' element={<Courses/>}/>
+                    <Route path='assignments' element={<AdminAssignments/>}/>
                     <Route path='about' element={<About/>}/>
                     
                     <Route path='studentinfo' element={<StudentInfo/>}>

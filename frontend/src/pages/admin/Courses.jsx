@@ -1,65 +1,57 @@
 import React, { useState } from 'react'
-import useStudentStore from '../../store/useStudentStore'
+import axios  from 'axios'
+import useStudentStore from "../../store/useStudentStore";
+
 const Courses = () => {
-  
-  const [selectedCourse, setselectedCourse] = useState('')
 
-  const btnClicked = async () =>{
+const courses = useStudentStore((state) => state.courses);
+const students = useStudentStore((state) => state.students);
+const assignments = useStudentStore((state) => state.assignments)
+ const { addAssignment , deleteAssignment } = useStudentStore();
+ 
+ const initialcourseinfo = {CourseId : "", selectedStudents: []}
 
-    setselectedCourse(e.name.value)
-  } 
+ const [Courseinfo, setCourseinfo] = useState(initialcourseinfo)
 
-   const students = useStudentStore((state) => state.students);
-    if(!students){
-      return null;
-    }
 
-    const allCourses = [
-  ...new Set(
-    students.flatMap(student =>
-      student.courses?.map(course => course.courseName)
-    )
-  )
-];
+const handleChange = (e) =>{
+  setCourseinfo((prev)=> ({
+    ...prev,
+    [e.target.name]: e.target.value
 
-  return (
-    <div className='bg-white rounded-3xl border-4 w-full h-full mr-5 flex p-4 gap-3'>
-        <div className='bg-black rounded-2xl p-2 w-45 flex flex-col justify-center items-center gap-3 '>
-            {allCourses.map((courseName) => (
-              <div className='bg-yellow-300 hover:bg-purple-500 p-1 text-xl font-bold rounded-3xl border-2 px-5 ' key={courseName}>
-               <button  onClick={() => setselectedCourse(courseName)} className='flex justify-center items-center'> {courseName}</button>
-              </div>
-            ))}
-        </div>
+  }))
+}
 
-    <div className='bg-amber-300 p-3 w-full h-full rounded-3xl '>
-      <h1 className='text-2xl font-bold mb-3'>Name lastName totalClasses Attendedcourse percentage</h1>
-        {students
-          .filter(student =>
-            student.courses?.some(course => course.courseName === `${selectedCourse}`)
-          )
-      .map(student => {
 
-        const matchedCourse = student.courses.find(
-          course => course.courseName === selectedCourse
-        );
-
-        return (
-          <div key={student._id}>
-            
-            <h1 className=' font-bold '>
-              {student.firstName} {student.lastName} — {matchedCourse.totalClasses} {matchedCourse.attendedClasses} {matchedCourse.percentage}
-            </h1>
+  return ( 
+      <div>
+        <div>
+          
+          <form action="">
+            <h1>Add New Course</h1>
+          <input 
+          type="text" 
+          placeholder='Course Name'
+          name='CourseId'
+          value={Courseinfo.CourseId}  
+          />
+          <div className=''>
+            {students.map((student) => (
+            <label className='flex flex-column gap-1'   key={student._id}>
+            <input
+            type="checkbox"
+            value={student._id}
+            />
+          {student.firstName} {student.lastName}
+        </label>
+        
+      ))}
           </div>
-        );
-
-})}
-    </div>
-
-
-
-   
-    </div>
+         <button>submit</button>
+          </form>
+        </div>
+      </div>
+  
   )
 }
 

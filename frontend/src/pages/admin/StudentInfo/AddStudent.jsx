@@ -3,210 +3,133 @@ import axios from 'axios'
 import useStudentStore from '../../../store/useStudentStore'
 
 const AddStudent = () => {
-
   const { addStudent } = useStudentStore();
+  const coursesfromstore = useStudentStore((state) => state.courses);
 
   const initialStudent = {
-  firstName: "",
-  lastName: "",
-  gender: "",
-  email: "",
-  imgURL: "",
-  password:"",
-  courses: [{}],
-  attendance: {}
-}
+    firstName: "", lastName: "", gender: "",
+    email: "", imgURL: "", password: "",
+  };
+  const initialCourse = [];
 
-const initialCourse = {
-  courseName: "",
-  credits: "",
-}
+  const [student, setstudent] = useState(initialStudent);
+  const [courses, setcourses] = useState(initialCourse);
 
-const initialAttendance = {
-  totalClasses: "",
-  attendedClasses: "",
-  percentage: "",
-}
+  const handleClick = (e) => {
+    setstudent({ ...student, [e.target.name]: e.target.value });
+  };
 
-const [student, setstudent] = useState(initialStudent)
-const [courses, setcourses] = useState([])
-const [courseInput, setcourseInput] = useState(initialCourse)
-const [attendance, setattendance] = useState(initialAttendance)
-
-  const handleCoursesClicked = (e)=> {
-    setcourseInput({
-      ...courseInput,
-      [e.target.name] : e.target.value
-    })
-  }
-
-  const handleAttandace = (e) => {
-    setattendance({
-      ...attendance,
-      [e.target.name] : e.target.value
-    })
-  }
-
-  const handleClick = (e)=>{
-    setstudent({
-      ...student,
-      [e.target.name]: e.target.value
-    })
-  }
-  const deleteCourse = async (idx) =>{
-    setcourses(prev => {
-  const updated = [...prev];   // clone array
-  updated.splice(idx, 1);      // modify clone
-  return updated;              // return new array
-});
-  }
-  const submitCourse = async (e) =>{
+  const coursesClicked = (e, idx) => {
     e.preventDefault();
+    const id = coursesfromstore[idx]._id;
+    setcourses(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  };
 
-    if (!courseInput.courseName || !courseInput.credits) return;
-    setcourses(
-      [...courses, courseInput]
-    )
-    alert(`course submitted : ${courseInput.courseName} \n cerdits submitted: ${courseInput.credits}`)
-    setcourseInput(initialCourse)
-
-  }
-
-  const btnClicked = async (e)=>{
+  const btnClicked = async (e) => {
     e.preventDefault();
-    console.log(student)
-    console.log(courses)
-    console.log(attendance)
-    
-    
-try{
-    const finalStudent = {
-      ...student,
-      courses: courses,
-      attendance: attendance
+    try {
+      const finalStudent = { ...student };
+      const AppliedCourses = [...courses];
+      const response = await axios.post("http://localhost:8004/students", finalStudent, { withCredentials: true });
+      const StudentId = await response.data._id;
+      const response2 = await axios.patch("http://localhost:8004/enrollmultiplecoures", { AppliedCourses, StudentId }, { withCredentials: true });
+      addStudent(response2.data.Student);
+      setstudent(initialStudent);
+    } catch (error) {
+      alert("Error: something's wrong here", error.message);
     }
-    console.log("finalStudent :", finalStudent)
+  };
 
-    const response = await axios.post("http://localhost:8004/students", finalStudent, {
-      withCredentials: true,
-    })
-    console.log(useStudentStore.getState());
-    addStudent(response.data);
-    console.log(useStudentStore.getState());
-    
-    setstudent(initialStudent)
-    setcourses([])
-    setattendance(initialAttendance)
-    console.log(response)
-}catch(error){
-  alert("Error: Either the email is taken or fill all the fields " );
-}
-    
-    
-    
-  }
+  const inputClass = "bg-[#0d0f14] border border-white/5 text-slate-300 text-[13px] placeholder-slate-600 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500/40 transition-colors w-full";
+  const labelClass = "text-[10px] uppercase tracking-widest text-slate-600 font-semibold mb-1 block";
+
   return (
-    <div className='bg-pink-300 border-4 p-5 h-full rounded-3xl flex  justify-center overflow-y-auto '>
-        <form onSubmit={btnClicked} className='flex flex-col gap-3'>
-          <h1 className='text-3xl mb-2 font-bold '>Please Fill Student Info</h1>
+    <div className="p-6 w-full h-full overflow-y-auto
+      [&::-webkit-scrollbar]:w-1
+      [&::-webkit-scrollbar-track]:bg-transparent
+      [&::-webkit-scrollbar-thumb]:bg-white/10
+      [&::-webkit-scrollbar-thumb]:rounded-full">
 
+      <div className="mb-6">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-semibold mb-1">Enroll</p>
+        <h1 className="text-2xl font-semibold text-white tracking-tight">Add New Student</h1>
+      </div>
+
+      <form onSubmit={btnClicked} className="max-w-2xl flex flex-col gap-5">
+
+        {/* Name row */}
+        <div className="grid grid-cols-3 gap-3">
           <div>
-            <input 
-          name='firstName'
-          onChange={handleClick}
-          value={student.firstName}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='First Name' />
-
-          <input 
-          name='lastName'
-          onChange={handleClick}
-          value={student.lastName}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='Last Name' />
-
-          <input 
-          name='gender'
-          onChange={handleClick}
-          value={student.gender}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='Gender' />
-
+            <label className={labelClass}>First name</label>
+            <input name='firstName' onChange={handleClick} value={student.firstName} className={inputClass} type="text" placeholder='First name' />
           </div>
-
-          
-         <div className='flex'>
-           <input 
-          name='email'
-          onChange={handleClick}
-          value={student.email}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          placeholder='Email' />
-          
-          <input 
-          name='password'
-          onChange={handleClick}
-          value={student.password}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          autoComplete="off"
-          spellCheck={false}
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder='Password' />
-         </div>
-
-          <input 
-          name='imgURL'
-          onChange={handleClick}
-          value={student.imgURL}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          placeholder='Image Url' />
-
-        <div className='flex '> 
-          <input type="text"
-          className='bg-amber-50 p-3 rounded-3xl border w-full min-w-50 mr-1 px-2'
-          name='courseName'
-          onChange={handleCoursesClicked}
-          value={courseInput.courseName}
-          placeholder='Course Name' />
-
-          <input type="text"
-          className='bg-amber-50 p-3 rounded-3xl border w-full min-w-50 mr-1 px-2'
-          onChange={handleCoursesClicked}
-          value={courseInput.credits}
-          name='credits'
-          placeholder='Credits' />
-
-          <button onClick={submitCourse} className='bg-green-500 border-2 w-full border-black text-white text-xl p-2 rounded-2xl mt-auto --4'>Add Course</button>
-          
+          <div>
+            <label className={labelClass}>Last name</label>
+            <input name='lastName' onChange={handleClick} value={student.lastName} className={inputClass} type="text" placeholder='Last name' />
+          </div>
+          <div>
+            <label className={labelClass}>Gender</label>
+            <input name='gender' onChange={handleClick} value={student.gender} className={inputClass} type="text" placeholder='Gender' />
+          </div>
         </div>
+
+        {/* Email + Password */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelClass}>Email</label>
+            <input name='email' onChange={handleClick} value={student.email} className={inputClass} type="text" placeholder='Email address' />
+          </div>
+          <div>
+            <label className={labelClass}>Password</label>
+            <input name='password' onChange={handleClick} value={student.password} className={inputClass} type="password"
+              autoComplete="off" spellCheck={false} autoCorrect="off" autoCapitalize="off" placeholder='Password' />
+          </div>
+        </div>
+
+        {/* Image URL */}
         <div>
-          {courses.map(function(elem,idx){
-            return( <div className='flex w-full gap-4 mb-2'>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{courses[idx].courseName}</h1>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{courses[idx].credits}</h1>
-            <button onClick={()=> {deleteCourse(idx)}} className='bg-red-500 border w-full border-black text-white text-xl p-2 rounded-2xl mt-auto' >Delete</button>
-            </div>)
-          })}
+          <label className={labelClass}>Image URL</label>
+          <input name='imgURL' onChange={handleClick} value={student.imgURL} className={inputClass} type="text" placeholder='https://...' />
         </div>
 
+        {/* Courses */}
         <div>
-          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='Total Classes' />
-          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='Attended Classes' />
-          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='Percentage'/>
+          <label className={labelClass}>Select courses</label>
+          <div className="flex flex-wrap gap-2">
+            {coursesfromstore.map((elem, idx) => {
+              const selected = courses.includes(elem._id);
+              return (
+                <button
+                  key={elem._id}
+                  type="button"
+                  onClick={(e) => coursesClicked(e, idx)}
+                  className={`px-4 py-2 rounded-xl text-[13px] font-medium transition-all border
+                    ${selected
+                      ? "bg-indigo-600/20 text-indigo-400 border-indigo-500/30"
+                      : "bg-[#0d0f14] text-slate-500 border-white/5 hover:border-white/10 hover:text-slate-300"
+                    }`}
+                >
+                  {elem.courseName}
+                </button>
+              );
+            })}
+          </div>
+          {courses.length > 0 && (
+            <p className="text-[11px] text-slate-600 mt-2">{courses.length} course{courses.length > 1 ? 's' : ''} selected</p>
+          )}
         </div>
 
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-semibold py-2.5 rounded-xl transition-colors mt-2"
+        >
+          Add student
+        </button>
+      </form>
+    </div>
+  );
+};
 
-          <button type='submit' className='bg-green-500 border-2 border-black text-white text-xl p-2 rounded-2xl mt-auto --4'>Add student</button>
-        </form>
-      </div> 
-  )
-}
-
-export default AddStudent
+export default AddStudent;

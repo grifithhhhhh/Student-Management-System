@@ -3,239 +3,136 @@ import axios from 'axios'
 import useStudentStore from '../../../store/useStudentStore'
 
 const PatchStudent = () => {
-
   const { editStudent } = useStudentStore();
 
   const initialStudent = {
-  firstName: "",
-  lastName: "",
-  gender: "",
-  email: "",
-  imgURL: "",
-  password:"",
-  courses: [{}],
-  attendance: {}
-}
+    firstName: "", lastName: "", gender: "",
+    email: "", imgURL: "", password: "",
+    courses: [{}], attendance: {}
+  };
+  const initialCourse = { courseName: "", credits: "" };
+  const initialAttendance = { totalClasses: "", attendedClasses: "", percentage: "" };
 
-const initialCourse = {
-  courseName: "",
-  credits: "",
-}
+  const [student, setstudent] = useState(initialStudent);
+  const [courses, setcourses] = useState([]);
+  const [attendance, setattendance] = useState(initialAttendance);
+  const [courseInput, setcourseInput] = useState(initialCourse);
+  const [Email, setEmail] = useState("");
 
-const initialAttendance = {
-  totalClasses: "",
-  attendedClasses: "",
-  percentage: "",
-}
+  const handleCoursesClicked = (e) => setcourseInput({ ...courseInput, [e.target.name]: e.target.value });
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handleAttandace = (e) => setattendance({ ...attendance, [e.target.name]: e.target.value });
+  const handleClick = (e) => setstudent({ ...student, [e.target.name]: e.target.value });
 
-const [student, setstudent] = useState(initialStudent)
-const [courses, setcourses] = useState([])
-const [attendance, setattendance] = useState(initialAttendance)
-const [courseInput, setcourseInput] = useState(initialCourse)
-const [Email, setEmail] = useState("")
+  const deleteCourse = async (idx) => {
+    setcourses(prev => { const updated = [...prev]; updated.splice(idx, 1); return updated; });
+  };
 
-  const handleCoursesClicked = (e)=> {
-    setcourseInput({
-      ...courseInput,
-      [e.target.name] : e.target.value
-    })
-  }
-  const handleEmail = (e) =>{
-    setEmail(e.target.value)
-  }
-  const handleAttandace = (e) => {
-    setattendance({
-      ...attendance,
-      [e.target.name] : e.target.value
-    })
-  }
+  const removeEmptyFields = (obj) =>
+    Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== "" && value !== null && value !== undefined));
 
-  const handleClick = (e)=>{
-    setstudent({
-      ...student,
-      [e.target.name]: e.target.value
-    })
-  }
-  const deleteCourse = async (idx) =>{
-    setcourses(prev => {
-  const updated = [...prev];   // clone array
-  updated.splice(idx, 1);      // modify clone
-  return updated;              // return new array
-});
-  }
+  const submitCourse = async (e) => {
+    e.preventDefault();
+    if (!courseInput.courseName || !courseInput.credits) return;
+    setcourses([...courses, courseInput]);
+    alert(`Course submitted: ${courseInput.courseName}`);
+    setcourseInput(initialCourse);
+  };
 
-  const removeEmptyFields = (obj) => {
-  return Object.fromEntries(
-    Object.entries(obj).filter(
-      ([_, value]) =>
-        value !== "" &&
-        value !== null &&
-        value !== undefined
-    )
+  const btnClicked = async (e) => {
+    e.preventDefault();
+    const cleanedStudents = removeEmptyFields(student);
+    const cleanedAttendance = removeEmptyFields(attendance);
+    try {
+      const finalStudent = { ...cleanedStudents, courses, attendance: cleanedAttendance };
+      const response = await axios.patch(`http://localhost:8004/students/${Email}`, finalStudent, { withCredentials: true });
+      await editStudent(response.data);
+      setstudent(initialStudent);
+      setcourses([]);
+      setattendance(initialAttendance);
+      setEmail('');
+    } catch (error) {
+      alert("Error: Either the email is taken or fill all the fields");
+    }
+  };
+
+  const inputClass = "bg-[#0d0f14] border border-white/5 text-slate-300 text-[13px] placeholder-slate-600 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500/40 transition-colors w-full";
+  const labelClass = "text-[10px] uppercase tracking-widest text-slate-600 font-semibold mb-1 block";
+
+  return (
+    <div className="p-6 w-full h-full overflow-y-auto
+      [&::-webkit-scrollbar]:w-1
+      [&::-webkit-scrollbar-track]:bg-transparent
+      [&::-webkit-scrollbar-thumb]:bg-white/10
+      [&::-webkit-scrollbar-thumb]:rounded-full">
+
+      <div className="mb-6">
+        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-semibold mb-1">Manage</p>
+        <h1 className="text-2xl font-semibold text-white tracking-tight">Edit Student</h1>
+      </div>
+
+      <form onSubmit={btnClicked} className="max-w-2xl flex flex-col gap-5">
+
+        {/* Lookup by email */}
+        <div className="bg-[#13161e] border border-white/5 rounded-2xl p-4">
+          <label className={labelClass}>Find student by email</label>
+          <input
+            name='email'
+            onChange={handleEmail}
+            value={Email}
+            className={inputClass}
+            type="text"
+            placeholder='Original email address'
+          />
+        </div>
+
+        {/* New name */}
+        <div>
+          <p className="text-[11px] text-slate-500 mb-3 font-medium">Update fields (leave blank to keep existing)</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className={labelClass}>First name</label>
+              <input name='firstName' onChange={handleClick} value={student.firstName} className={inputClass} type="text" placeholder='New first name' />
+            </div>
+            <div>
+              <label className={labelClass}>Last name</label>
+              <input name='lastName' onChange={handleClick} value={student.lastName} className={inputClass} type="text" placeholder='New last name' />
+            </div>
+            <div>
+              <label className={labelClass}>Gender</label>
+              <input name='gender' onChange={handleClick} value={student.gender} className={inputClass} type="text" placeholder='New gender' />
+            </div>
+          </div>
+        </div>
+
+        {/* Email + Password */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelClass}>New email</label>
+            <input name='email' onChange={handleClick} value={student.email} className={inputClass} type="text" placeholder='New email' />
+          </div>
+          <div>
+            <label className={labelClass}>New password</label>
+            <input name='password' onChange={handleClick} value={student.password} className={inputClass} type="password"
+              autoComplete="off" spellCheck={false} autoCorrect="off" autoCapitalize="off" placeholder='New password' />
+          </div>
+        </div>
+
+        {/* Image URL */}
+        <div>
+          <label className={labelClass}>New image URL</label>
+          <input name='imgURL' onChange={handleClick} value={student.imgURL} className={inputClass} type="text" placeholder='https://...' />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-semibold py-2.5 rounded-xl transition-colors"
+        >
+          Save changes
+        </button>
+      </form>
+    </div>
   );
 };
- const submitCourse = async (e) =>{
-    e.preventDefault();
 
-    if (!courseInput.courseName || !courseInput.credits) return;
-    setcourses(
-      [...courses, courseInput]
-    )
-    alert(`course submitted : ${courseInput.courseName} \n cerdits submitted: ${courseInput.credits}`)
-    setcourseInput(initialCourse)
-
-  }
-
-  const btnClicked = async (e)=>{
-    e.preventDefault();
-    const cleanedStudents = removeEmptyFields(student)
-    const cleanedCourses = removeEmptyFields(courseInput)
-    const cleanedAttendance = removeEmptyFields(attendance)
-    console.log(cleanedStudents)
-    console.log(cleanedCourses)
-    console.log(cleanedAttendance)
-    console.log(Email)
-    
-    
-try{
-    const finalStudent = {
-      ...cleanedStudents,
-      courses: courses,
-      attendance: cleanedAttendance
-    }
-    console.log("finalStudent :", finalStudent)
-
-    const response = await axios.patch(`http://localhost:8004/students/${Email}`, finalStudent, {
-      withCredentials: true,
-    })
-    console.log("before edit:",useStudentStore.getState());
-    await editStudent(response.data);
-    console.log("after edit",useStudentStore.getState());
-    
-    setstudent(initialStudent)
-    setcourses([])
-    setattendance(initialAttendance)
-    setEmail('')
-    console.log(response)
-}catch(error){
-  alert("Error: Either the email is taken or fill all the fields " );
-}
-    
-    
-    
-  }
-  return (
-    <div className='bg-blue-300 border-4 p-5 h-full rounded-3xl flex  justify-center overflow-y-auto  '>
-        <form onSubmit={btnClicked} className='flex flex-col gap-3 m-4'>
-         <div className='flex gap-5'>
-           <h1 className='text-3xl mb-2 font-bold '>Edit by Email</h1>
-          <input 
-          name='email'
-          onChange={handleEmail}
-          value={Email}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          placeholder='Original Email' />
-         </div>
-          
-
-          <div>
-            <input 
-          name='firstName'
-          onChange={handleClick}
-          value={student.firstName}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='New First Name' />
-
-          <input 
-          name='lastName'
-          onChange={handleClick}
-          value={student.lastName}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='New Last Name' />
-
-          <input 
-          name='gender'
-          onChange={handleClick}
-          value={student.gender}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2'
-          type="text" 
-          placeholder='New Gender' />
-
-          </div>
-
-          
-         <div className='flex'>
-           <input 
-          name='email'
-          onChange={handleClick}
-          value={student.email}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          placeholder='New Email' />
-          
-          <input 
-          name='password'
-          onChange={handleClick}
-          value={student.password}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          autoComplete="off"
-          spellCheck={false}
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder='New Password' />
-         </div>
-
-          <input 
-          name='imgURL'
-          onChange={handleClick}
-          value={student.imgURL}
-          className='bg-amber-50 p-3 rounded-3xl border min-w-80 mr-1 px-2'
-          type="text" 
-          placeholder='New Image Url' />
-
-        <div className='flex '> 
-          <input type="text"
-          className='bg-amber-50 p-3 rounded-3xl border w-full min-w-50 mr-1 px-2'
-          name='courseName'
-          onChange={handleCoursesClicked}
-          value={courseInput.courseName}
-          placeholder='Course Name' />
-
-          <input type="text"
-          className='bg-amber-50 p-3 rounded-3xl border w-full min-w-50 mr-1 px-2'
-          onChange={handleCoursesClicked}
-          value={courseInput.credits}
-          name='credits'
-          placeholder='Credits' />
-
-          <button onClick={submitCourse} className='bg-green-500 border-2 w-full border-black text-white text-xl p-2 rounded-2xl mt-auto --4'>Add Course</button>
-          
-        </div>
-        <div>
-          {courses.map(function(elem,idx){
-            return( <div className='flex w-full gap-4 mb-2'>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{elem.courseName}</h1>
-            <h1 className=' bg-white rounded-2xl p-3 px-2 text-black border w-full'>{elem.credits}</h1>
-            <button onClick={()=> {deleteCourse(idx)}} className='bg-red-500 border w-full border-black text-white text-xl p-2 rounded-2xl mt-auto' >Delete</button>
-            </div>)
-          })}
-        </div>
-
-        <div>
-          <input type="text" value={attendance.totalClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='totalClasses' placeholder='New Total Classes' />
-          <input type="text" value={attendance.attendedClasses} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='attendedClasses' placeholder='New Attended Classes' />
-          <input type="text" value={attendance.percentage} className='bg-amber-50 p-3 rounded-3xl border min-w-50 mr-1 px-2' onChange={handleAttandace} name='percentage' placeholder='New Percentage'/>
-        </div>
-
-
-          <button type='submit' className='bg-green-500 border-2 border-black text-white text-xl p-2 rounded-2xl mb-4 mt-auto --4'>Add student</button>
-        </form>
-      </div> 
-  )
-}
-
-export default PatchStudent
+export default PatchStudent;
