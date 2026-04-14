@@ -3,7 +3,7 @@ import Navbar from '../components/adminComponents/Navbar'
 import Sidebar from '../components/adminComponents/Sidebar'
 import Herosection from '../components/adminComponents/Herosection'
  
-const admin = () => {
+const Admin = () => {
   return (
     <div className='flex w-screen h-screen bg-[#0d0f14] overflow-hidden'>
       <Sidebar />
@@ -15,5 +15,5 @@ const admin = () => {
   )
 }
  
-export default admin
+export default Admin
  
