@@ -15,7 +15,7 @@ const cookieParser = require("cookie-parser");
 
 // Middleware--------------------------------------
    app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",  // CHANGE THIS
+    origin: process.env.FRONTEND_URL || "https://student-managment-system-by-pushpak.netlify.app",  // CHANGE THIS
     credentials: true
 }));
     app.use(createLogs("log.txt"));
