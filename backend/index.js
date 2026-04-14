@@ -1,5 +1,7 @@
 const express = require("express")
-const PORT = 8004
+const dotenv = require("dotenv")        // ADD THIS
+dotenv.config()                          // ADD THIS
+const PORT = process.env.PORT || 8004   // CHANGE THIS
 const app = express()
 const fs = require("fs")
 const {createLogs} = require("./middlewares/log")
@@ -12,20 +14,20 @@ const cookieParser = require("cookie-parser");
 
 
 // Middleware--------------------------------------
-    app.use(cors({
-    origin: "http://localhost:5173", // your frontend port
+   app.use(cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",  // CHANGE THIS
     credentials: true
-    }));
+}));
     app.use(createLogs("log.txt"));
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(cookieParser())
 
 // CONNECTION ------------------------
-    mongoose.connect('mongodb://127.0.0.1:27017/studentserver')
-    .then(() => {console.log("MongoDB connected")})
-    .catch(err => console.log(err))
-    
+    mongoose.connect(process.env.MONGO_URI)   // CHANGE THIS
+        .then(() => {console.log("MongoDB connected")})
+        .catch(err => console.log(err))
+            
 // ROUTES -----------------------------
    app.use('/', studentRouter)
    app.use('/', courseRouter)
