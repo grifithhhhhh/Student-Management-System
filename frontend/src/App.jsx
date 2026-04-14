@@ -24,6 +24,7 @@ import About from './pages/admin/About'
 import Courses from './pages/admin/Courses'
 import AdminAssignments from './pages/admin/Assignments'
 import Settings from './pages/studentPages/Settings'
+import Register from './pages/Register'
 
 
 
@@ -52,6 +53,7 @@ function App() {
          
           <Routes>
             <Route path='/' element={<Login/>} />
+            <Route path='/register' element={<Register/>} />
             <Route path='/student' element={<Student/>} >
             <Route index element={<StudentWelcome/>}/>
             <Route path='studentDashboard' element={<StudentDashboard/>}/>
