@@ -13,10 +13,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 
+
 // Middleware--------------------------------------
    app.use(cors({
-    origin: process.env.FRONTEND_URL || "https://student-managment-system-by-pushpak.netlify.app",  // CHANGE THIS
-    credentials: true
+  origin: [
+    'http://localhost:5173',
+    'https://student-managment-system-by-pushpak.netlify.app'
+  ],
+  credentials: true
 }));
     app.use(createLogs("log.txt"));
     app.use(express.urlencoded({ extended: true }));
