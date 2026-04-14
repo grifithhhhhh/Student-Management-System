@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../../api'
 import useStudentStore from "../../store/useStudentStore";
  
 const Assignments = () => {
@@ -17,7 +17,7 @@ const Assignments = () => {
  
   const handlesubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:8004/assignments", assignmentinfo);
+    const response = await api.post("/assignments", assignmentinfo);
     addAssignment(response.data.assignment);
     setassignmentinfo(initialAssignmentInfo);
   };
@@ -25,7 +25,7 @@ const Assignments = () => {
   const deleteAssignmentOnClick = async (idx) => {
     try {
       const deleteId = { id: assignments[idx]._id };
-      const response = await axios.delete(`http://localhost:8004/assignments`, { data: deleteId });
+      const response = await api.delete(`/assignments`, { data: deleteId });
       deleteAssignment(assignments[idx]._id);
     } catch (error) {
       console.log(error);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import api from '../../../api'
 import useStudentStore from '../../../store/useStudentStore'
 
 const AddStudent = () => {
@@ -32,9 +33,9 @@ const AddStudent = () => {
     try {
       const finalStudent = { ...student };
       const AppliedCourses = [...courses];
-      const response = await axios.post("http://localhost:8004/students", finalStudent, { withCredentials: true });
+      const response = await api.post("/students", finalStudent, { withCredentials: true });
       const StudentId = await response.data._id;
-      const response2 = await axios.patch("http://localhost:8004/enrollmultiplecoures", { AppliedCourses, StudentId }, { withCredentials: true });
+      const response2 = await api.patch("/enrollmultiplecoures", { AppliedCourses, StudentId }, { withCredentials: true });
       addStudent(response2.data.Student);
       setstudent(initialStudent);
     } catch (error) {

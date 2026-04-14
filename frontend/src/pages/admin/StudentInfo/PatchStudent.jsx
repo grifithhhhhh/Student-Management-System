@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../../../api'
 import useStudentStore from '../../../store/useStudentStore'
 
 const PatchStudent = () => {
@@ -45,7 +45,7 @@ const PatchStudent = () => {
     const cleanedAttendance = removeEmptyFields(attendance);
     try {
       const finalStudent = { ...cleanedStudents, courses, attendance: cleanedAttendance };
-      const response = await axios.patch(`http://localhost:8004/students/${Email}`, finalStudent, { withCredentials: true });
+      const response = await api.patch(`/students/${Email}`, finalStudent, { withCredentials: true });
       await editStudent(response.data);
       setstudent(initialStudent);
       setcourses([]);

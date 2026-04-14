@@ -1,4 +1,5 @@
 import axios from 'axios'
+import api from '../api'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStudentStore from '../store/useStudentStore';
@@ -19,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true)
     try {
-      const response = await axios.post("http://localhost:8004/logininfo", student, { withCredentials: true });
+      const response = await api.post("/logininfo", student, { withCredentials: true });
       if (response.status === 200) {
         if (student.role === "admin")   { loginAdmin(response.data.Data);                navigate('/admin') }
         if (student.role === "student") { loginStudent(response.data.student, "student"); navigate('/student') }

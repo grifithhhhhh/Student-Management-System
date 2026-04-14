@@ -1,7 +1,7 @@
 
 
 import React, { useState } from "react";
-import axios from "axios";
+import api from '../../api'
 import useStudentStore from "../../store/useStudentStore";
  
 const Attendance = () => {
@@ -27,7 +27,7 @@ const Attendance = () => {
     if (!selectedCourse) { alert("Select a course first"); return; }
     try {
       const ifPresent = attendanceState[studentId] === "present";
-      const res = await axios.patch("http://localhost:8004/courses/attendance", {
+      const res = await api.patch("/courses/attendance", {
         CourseId: selectedCourse, StudentId: studentId, ifPresent,
       });
       editStudent(res.data.student);
@@ -41,7 +41,7 @@ const Attendance = () => {
   const submitMarks = async (studentId) => {
     if (!selectedCourse) { alert("Select a course first"); return; }
     try {
-      const res = await axios.patch("http://localhost:8004/courses/marks", {
+      const res = await api.patch("/courses/marks", {
         StudentId: studentId, CourseId: selectedCourse, Marks: marksState[studentId],
       });
       editStudent(res.data.Student);
